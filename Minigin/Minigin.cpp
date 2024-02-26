@@ -4,13 +4,15 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <chrono>
+#include <thread>
 #include "Minigin.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 
-SDL_Window* g_window{};
+SDL_Window* g_Window{};
 
 void PrintSDLVersion()
 {
@@ -49,7 +51,7 @@ dae::Minigin::Minigin(const std::string &dataPath)
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
 
-	g_window = SDL_CreateWindow(
+	g_Window = SDL_CreateWindow(
 		"Programming 4 assignment",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
@@ -57,12 +59,13 @@ dae::Minigin::Minigin(const std::string &dataPath)
 		480,
 		SDL_WINDOW_OPENGL
 	);
-	if (g_window == nullptr) 
+
+	if (g_Window == nullptr) 
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
 
-	Renderer::GetInstance().Init(g_window);
+	Renderer::GetInstance().Init(g_Window);
 
 	ResourceManager::GetInstance().Init(dataPath);
 }
@@ -70,8 +73,8 @@ dae::Minigin::Minigin(const std::string &dataPath)
 dae::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
-	SDL_DestroyWindow(g_window);
-	g_window = nullptr;
+	SDL_DestroyWindow(g_Window);
+	g_Window = nullptr;
 	SDL_Quit();
 }
 
@@ -79,16 +82,36 @@ void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
 
-	auto& renderer = Renderer::GetInstance();
+	const auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
 
-	// todo: this update loop could use some work.
 	bool doContinue = true;
+
+	const float fixedTimeStep{ 0.02f };
+	auto previousTime{ std::chrono::high_resolution_clock::now() };
+	float lag{ 0.0f };
+	const float millisecondsPerFrame{ 1.0f / 60.0f };	// 60 FPS
+
 	while (doContinue)
 	{
+		const auto currentTime{ std::chrono::high_resolution_clock::now() };
+		const float deltaTime{ std::chrono::duration<float>(currentTime - previousTime).count() };
+		previousTime = currentTime;
+		lag += deltaTime;
+
 		doContinue = input.ProcessInput();
-		sceneManager.Update();
+		sceneManager.Update(deltaTime);
+
+		while (lag >= fixedTimeStep)
+		{
+			sceneManager.FixedUpdate(fixedTimeStep);
+			lag -= fixedTimeStep;
+		}
+
 		renderer.Render();
+
+		const auto sleepTime{ currentTime + std::chrono::duration<float>(millisecondsPerFrame) - std::chrono::high_resolution_clock::now() };
+		std::this_thread::sleep_for(sleepTime);
 	}
 }

@@ -1,44 +1,62 @@
 #include "Scene.h"
 #include "GameObject.h"
-
+#include "Component.h"
+#include "IRenderable.h"
 #include <algorithm>
-
-using namespace dae;
 
 unsigned int Scene::m_idCounter = 0;
 
-Scene::Scene(const std::string& name) : m_name(name) {}
+Scene::Scene(const std::string& name) : m_Name(name) {}
 
 Scene::~Scene() = default;
 
 void Scene::Add(std::shared_ptr<GameObject> object)
 {
-	m_objects.emplace_back(std::move(object));
+	m_GameObjects.emplace_back(std::move(object));
 }
 
 void Scene::Remove(std::shared_ptr<GameObject> object)
 {
-	m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
+	m_GameObjects.erase(std::remove(m_GameObjects.begin(), m_GameObjects.end(), object), m_GameObjects.end());
 }
 
 void Scene::RemoveAll()
 {
-	m_objects.clear();
+	m_GameObjects.clear();
 }
 
-void Scene::Update()
+void Scene::Update(const float deltaTime)
 {
-	for(auto& object : m_objects)
+	for(auto& object : m_GameObjects)
 	{
-		object->Update();
+		object->Update(deltaTime);
+	}
+}
+
+void Scene::FixedUpdate(const float fixedDeltaTime)
+{
+	for (auto& object : m_GameObjects)
+	{
+		object->Update(fixedDeltaTime);
 	}
 }
 
 void Scene::Render() const
 {
-	for (const auto& object : m_objects)
+	for (const auto& object : m_GameObjects)
 	{
-		object->Render();
+		const std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> components{ object->GetAllComponents() };
+
+		for (auto& type : components)
+		{
+			for (auto& component : type.second)
+			{
+				// Do NOT do this for every element in the vector, just one is enough
+				if (IRenderable* renderable = dynamic_cast<IRenderable*>(component.get()))
+				{
+					renderable->Render();
+				}
+			}
+		}
 	}
 }
-

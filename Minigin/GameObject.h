@@ -1,31 +1,48 @@
 #pragma once
 #include <memory>
+#include <vector>
+#include <string>
+#include <unordered_map>
 #include "Transform.h"
 
-namespace dae
+class Texture2D;
+class Component;
+
+class GameObject final
 {
-	class Texture2D;
+public:
+	void AddComponent(const std::weak_ptr<Component> pComponent);
 
-	// todo: this should become final.
-	class GameObject 
+	template<typename T>
+	const std::vector<std::shared_ptr<Component>>& GetComponentsOfType()
 	{
-	public:
-		virtual void Update();
-		virtual void Render() const;
+		const std::string name{ type_info(T).name() };
+		return m_Components[name];
+	}
 
-		void SetTexture(const std::string& filename);
-		void SetPosition(float x, float y);
+	inline const std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>>& GetAllComponents() const { return m_Components; }
+	
+	template<typename T>
+	void RemoveAllComponentsOfType()
+	{
+		const std::string name{ type_info(T).name() };
+		m_Components.erase(name);
+	}
+	void Update(const float deltaTime);
 
-		GameObject() = default;
-		virtual ~GameObject();
-		GameObject(const GameObject& other) = delete;
-		GameObject(GameObject&& other) = delete;
-		GameObject& operator=(const GameObject& other) = delete;
-		GameObject& operator=(GameObject&& other) = delete;
+	inline Transform GetTransform() const { return m_Transform; }
+	void SetPosition(const float x, const float y);
 
-	private:
-		Transform m_transform{};
-		// todo: mmm, every gameobject has a texture? Is that correct?
-		std::shared_ptr<Texture2D> m_texture{};
-	};
-}
+	GameObject() = default;
+	GameObject(const float x, const float y);
+	~GameObject() = default;
+	GameObject(const GameObject& other) = delete;
+	GameObject(GameObject&& other) = delete;
+	GameObject& operator=(const GameObject& other) = delete;
+	GameObject& operator=(GameObject&& other) = delete;
+
+private:
+	Transform m_Transform{};
+
+	std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> m_Components;
+};
