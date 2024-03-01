@@ -4,7 +4,6 @@
 class Component
 {
 public:
-	Component(const std::weak_ptr<class GameObject> pOwner);
 	virtual ~Component() = default;
 	virtual void Update(const float /*deltaTime*/) {}
 
@@ -14,6 +13,7 @@ public:
 	Component& operator=(Component&& other) = delete;
 
 protected:
+	Component(const std::weak_ptr<class GameObject> pOwner);
 	// Returning as shared_ptr so that components can use it, instead of having to check for validity and lock every time everywhere
 	std::shared_ptr<class GameObject> GetOwner() const;
 

@@ -30,8 +30,13 @@ public:
 	}
 	void Update(const float deltaTime);
 
+	void SetParent(GameObject* pParent, bool keepWorldPosition);
+
 	inline Transform GetTransform() const { return m_Transform; }
-	void SetPosition(const float x, const float y);
+	void SetWorldPosition(const float x, const float y);
+	void SetWorldPosition(const glm::vec3& position);
+	inline bool IsDestroyed() const { return m_IsDestroyed; }
+	inline bool IsLocalPositionDirty() const { return m_LocalPositionIsDirty; }
 
 	GameObject() = default;
 	GameObject(const float x, const float y);
@@ -42,7 +47,19 @@ public:
 	GameObject& operator=(GameObject&& other) = delete;
 
 private:
-	Transform m_Transform{};
+	Transform m_Transform{};	//WorldPosition
+	Transform m_LocalPosition{};
+	//bool m_LocalPositionIsDirty{ false };
+	bool m_IsDestroyed{ false };
+
+	GameObject* m_pParent{ };
+	std::vector<GameObject*> m_Children{ };
 
 	std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> m_Components;
+
+	void AddChild(GameObject* pChild);
+	void RemoveChild(GameObject* pChild);
+	bool IsChild(const GameObject* pChild);
+
+	void SetLocalPosition(const glm::vec3& position);
 };
