@@ -10,9 +10,6 @@ public:
 	void SetPosition(const float x, const float y);
 	void SetPosition(const glm::vec2 position);
 
-	/*static Transform operator+(const Transform& transform1, const Transform& transform2);
-	static Transform operator-(const Transform& transform1, const Transform& transform2);*/
-
 private:
 	glm::vec2 m_Position;
 };
