@@ -30,7 +30,7 @@ public:
 	}
 	void Update(const float deltaTime);
 
-	void SetParent(GameObject* pParent, bool keepWorldPosition);
+	void SetParent(GameObject* pParent, const bool keepWorldPosition);
 
 	inline Transform GetTransform() const { return m_LocalTransform; }
 	glm::vec2 GetWorldPosition() const;
@@ -50,7 +50,7 @@ public:
 	GameObject& operator=(GameObject&& other) = delete;
 
 private:
-	Transform m_LocalTransform{};	//WorldPosition
+	Transform m_LocalTransform{};
 	//bool m_LocalPositionIsDirty{ false };
 	bool m_IsDestroyed{ false };
 

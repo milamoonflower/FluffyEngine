@@ -1,8 +1,6 @@
 #include "Rotator.h"
 #include "GameObject.h"
 
-constexpr float PI{ 3.14159f };
-
 Rotator::Rotator(const std::weak_ptr<GameObject> pOwner, const float angleDegrees, const glm::vec2& center)
 	: Component(pOwner)
 	, m_RotationAngleDegrees{ angleDegrees }
@@ -23,7 +21,7 @@ void Rotator::Update(const float deltaTime)
 {
 	if (auto owner{ GetOwner() })
 	{
-		glm::vec2 position{ GetOwner()->GetTransform().GetPosition() };
+		glm::vec2 position{ owner->GetTransform().GetPosition() };
 
 		const float anglesRad{ m_RotationAngleDegrees * (PI / 180.0f) * deltaTime };
 
@@ -39,6 +37,6 @@ void Rotator::Update(const float deltaTime)
 		x += m_RotationCenter.x;
 		y += m_RotationCenter.y;
 
-		GetOwner()->SetLocalPosition(x, y);
-	}	
+		owner->SetLocalPosition(x, y);
+	}
 }

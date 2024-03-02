@@ -2,6 +2,8 @@
 #include "Component.h"
 #include <glm/glm.hpp>
 
+constexpr float PI{ 3.14159f };
+
 class Rotator final : public Component
 {
 public:
