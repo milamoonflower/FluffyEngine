@@ -39,10 +39,10 @@ void GameObject::Update(const float deltaTime)
 
 void GameObject::SetWorldPosition(const float x, const float y)
 {
-	SetWorldPosition(glm::vec3(x, y, 0.0f));
+	SetWorldPosition(glm::vec2(x, y));
 }
 
-void GameObject::SetWorldPosition(const glm::vec3& position)
+void GameObject::SetWorldPosition(const glm::vec2& position)
 {
 	m_Transform.SetPosition(position);
 

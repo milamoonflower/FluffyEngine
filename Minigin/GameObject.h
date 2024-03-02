@@ -34,9 +34,9 @@ public:
 
 	inline Transform GetTransform() const { return m_Transform; }
 	void SetWorldPosition(const float x, const float y);
-	void SetWorldPosition(const glm::vec3& position);
+	void SetWorldPosition(const glm::vec2& position);
 	inline bool IsDestroyed() const { return m_IsDestroyed; }
-	inline bool IsLocalPositionDirty() const { return m_LocalPositionIsDirty; }
+	//inline bool IsLocalPositionDirty() const { return m_LocalPositionIsDirty; }
 
 	GameObject() = default;
 	GameObject(const float x, const float y);
