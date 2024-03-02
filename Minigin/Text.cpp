@@ -47,7 +47,7 @@ void Text::Render() const
 
 	if (const auto owner{ GetOwner() })
 	{
-		const auto& pos = owner->GetTransform().GetPosition();
+		const auto& pos = owner->GetWorldPosition();
 		Renderer::GetInstance().RenderTexture(*m_pTextTexture, pos.x, pos.y);
 	}
 }

@@ -37,6 +37,16 @@ void GameObject::Update(const float deltaTime)
 	}
 }
 
+glm::vec2 GameObject::GetWorldPosition() const
+{
+	if (m_pParent)
+	{
+		return m_LocalTransform.GetPosition() + m_pParent->GetWorldPosition();
+	}
+
+	return m_LocalTransform.GetPosition();
+}
+
 void GameObject::SetWorldPosition(const float x, const float y)
 {
 	SetWorldPosition(glm::vec2(x, y));
@@ -44,12 +54,24 @@ void GameObject::SetWorldPosition(const float x, const float y)
 
 void GameObject::SetWorldPosition(const glm::vec2& position)
 {
-	m_Transform.SetPosition(position);
+	m_LocalTransform.SetPosition(position);
 
 	if (m_pParent)
 	{
-		m_LocalPosition = m_pParent->GetTransform().GetPosition() - m_Transform.GetPosition();
+		m_LocalTransform.SetPosition(- m_pParent->GetTransform().GetPosition() + m_LocalTransform.GetPosition());
 	}
+}
+
+void GameObject::SetLocalPosition(const glm::vec2& position)
+{
+	m_LocalTransform.SetPosition(position);
+	//m_LocalPositionIsDirty = true;
+}
+
+void GameObject::SetLocalPosition(const float x, const float y)
+{
+	m_LocalTransform.SetPosition(x, y);
+	//m_LocalPositionIsDirty = true;
 }
 
 void GameObject::SetParent(GameObject* pParent, bool keepWorldPosition)
@@ -58,22 +80,24 @@ void GameObject::SetParent(GameObject* pParent, bool keepWorldPosition)
 	if (IsChild(pParent) || (!pParent && pParent == this) || m_pParent == pParent)
 		return;
 
-	if (pParent == nullptr)
+	if (keepWorldPosition)
 	{
-		// Set new localPosition as current worldPosition
-		m_Transform = m_LocalPosition;
-	}
-	else
-	{
-		if (keepWorldPosition)
+		if (m_pParent != nullptr)
 		{
-			// Set localPosition as (worldPosition - parent.WorldPositon)
-			m_LocalPosition = m_Transform.GetPosition() - m_pParent->GetTransform().GetPosition();
+			// Set new localPosition as current worldPosition
+			m_LocalTransform.SetPosition(m_LocalTransform.GetPosition() + m_pParent->GetWorldPosition());
 		}
 
-		// SetPositionDirty()
-		// did not add this right now because we need the worldPosition immeadiately for Render()
+		if (pParent != nullptr)
+		{
+			// Set localPosition as (worldPosition - parent.WorldPositon)
+			m_LocalTransform.SetPosition(m_LocalTransform.GetPosition() - pParent->GetWorldPosition());
+
+		}
 	}
+
+	// SetPositionDirty()
+	// did not add this right now because we need the worldPosition immeadiately for Render()
 
 	if (m_pParent)
 	{
@@ -114,10 +138,4 @@ bool GameObject::IsChild(const GameObject* pChild)
 {
 	//std::ranges::find does not work here, some issue with move constructor, which weak_ptr doesn't have
 	return std::find(m_Children.begin(), m_Children.end(), pChild) != m_Children.end();
-}
-
-void GameObject::SetLocalPosition(const glm::vec3& position)
-{
-	m_LocalPosition.SetPosition(position);
-	//m_LocalPositionIsDirty = true;
 }

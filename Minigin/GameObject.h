@@ -32,9 +32,12 @@ public:
 
 	void SetParent(GameObject* pParent, bool keepWorldPosition);
 
-	inline Transform GetTransform() const { return m_Transform; }
+	inline Transform GetTransform() const { return m_LocalTransform; }
+	glm::vec2 GetWorldPosition() const;
 	void SetWorldPosition(const float x, const float y);
 	void SetWorldPosition(const glm::vec2& position);
+	void SetLocalPosition(const float x, const float y);
+	void SetLocalPosition(const glm::vec2& position);
 	inline bool IsDestroyed() const { return m_IsDestroyed; }
 	//inline bool IsLocalPositionDirty() const { return m_LocalPositionIsDirty; }
 
@@ -47,8 +50,7 @@ public:
 	GameObject& operator=(GameObject&& other) = delete;
 
 private:
-	Transform m_Transform{};	//WorldPosition
-	Transform m_LocalPosition{};
+	Transform m_LocalTransform{};	//WorldPosition
 	//bool m_LocalPositionIsDirty{ false };
 	bool m_IsDestroyed{ false };
 
@@ -60,6 +62,4 @@ private:
 	void AddChild(GameObject* pChild);
 	void RemoveChild(GameObject* pChild);
 	bool IsChild(const GameObject* pChild);
-
-	void SetLocalPosition(const glm::vec3& position);
 };

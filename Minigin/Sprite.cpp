@@ -17,7 +17,7 @@ void Sprite::Render() const
 
 	if (const auto owner{ GetOwner() })
 	{
-		const auto& pos = owner->GetTransform().GetPosition();
+		const auto& pos = owner->GetWorldPosition();
 		Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
 	}
 }
