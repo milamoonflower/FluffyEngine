@@ -9,6 +9,7 @@ class Texture2D;
 class Sprite : public Component, public IRenderable
 {
 public:
+	std::string GetTypename() override { return "Sprite"; }
 	void Render() const override;
 	void SetTexture(const std::string& fileName);
 

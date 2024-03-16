@@ -11,12 +11,31 @@ class Component;
 class GameObject final
 {
 public:
-	void AddComponent(const std::weak_ptr<Component> pComponent);
+	template<typename T>
+	void AddComponent(const std::weak_ptr<T> pComponent)
+	{
+		const auto component{ pComponent.lock() };
+
+		if (component)
+		{
+			const std::string name = typeid(component.get()).name();
+
+			m_Components.try_emplace(name);
+			m_Components[name].push_back(pComponent.lock());
+		}
+	}
+
+	template<typename T>
+	T* GetComponentOfType()
+	{
+		const std::string name{ typeid(T*).name() };
+		return reinterpret_cast<T*>(m_Components[name][0].get());
+	}
 
 	template<typename T>
 	const std::vector<std::shared_ptr<Component>>& GetComponentsOfType()
 	{
-		const std::string name{ type_info(T).name() };
+		const std::string name{ typeid(T*).name() };
 		return m_Components[name];
 	}
 
@@ -25,7 +44,7 @@ public:
 	template<typename T>
 	void RemoveAllComponentsOfType()
 	{
-		const std::string name{ type_info(T).name() };
+		const std::string name{ typeid(T).name() };
 		m_Components.erase(name);
 	}
 	void Update(const float deltaTime);

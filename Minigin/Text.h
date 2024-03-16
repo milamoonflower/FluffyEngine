@@ -12,6 +12,7 @@ class Text final : public Component, public IRenderable
 {
 public:
 	void Update(const float deltaTime) override;
+	std::string GetTypename() override { return "Text"; }
 	void Render() const override;
 
 	void SetText(const std::string& text);

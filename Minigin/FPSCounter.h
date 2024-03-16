@@ -6,6 +6,7 @@ class FPSCounter : public Component
 public:
 	FPSCounter(const std::weak_ptr<GameObject> pOwner, const std::weak_ptr<class Text> pText);
 	void Update(const float deltaTime) override;
+	std::string GetTypename() override { return "FPSCounter"; }
 	inline float GetCurrentFPS() const { return m_FPS; }
 
 private:

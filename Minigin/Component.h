@@ -1,11 +1,13 @@
 #pragma once
 #include <memory>
+#include <string>
 
 class Component
 {
 public:
 	virtual ~Component() = default;
 	virtual void Update(const float /*deltaTime*/) {}
+	virtual std::string GetTypename() = 0;
 
 	Component(const Component& other) = delete;
 	Component(Component&& other) = delete;
