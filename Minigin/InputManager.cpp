@@ -8,7 +8,10 @@
 
 dae::InputManager::~InputManager()
 {
-	//delete command pointers
+	for (auto& item : m_MappedInputs)
+	{
+		delete item.second;
+	}
 }
 
 bool dae::InputManager::ProcessInput()
@@ -27,7 +30,7 @@ bool dae::InputManager::ProcessInput()
 		const auto& command = m_MappedInputs.find(e.key.keysym.scancode);
 
 		if (command != m_MappedInputs.end())
-			command->second->Execute(m_pInputReceiver);
+			command->second->Execute(m_pInputReceiver, command->first);
 
 		ImGui_ImplSDL2_ProcessEvent(&e);
 	}

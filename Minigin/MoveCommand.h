@@ -7,8 +7,19 @@
 class MoveCommand final : public Command
 {
 public:
-	void Execute(GameObject* pGameObject) override
+	void Execute(GameObject* pGameObject, SDL_Scancode input) override
 	{
-		pGameObject->GetComponentOfType<MoveComponent>()->Move(glm::vec2(0.0f, 1.0f));
+		glm::vec2 movement{0.0f, 0.0f};
+
+		if (input == SDL_SCANCODE_W)
+			++movement.y;
+		else if (input == SDL_SCANCODE_A)
+			++movement.x;
+		else if (input == SDL_SCANCODE_S)
+			--movement.y;
+		else if (input == SDL_SCANCODE_D)
+			--movement.x;
+
+		pGameObject->GetComponentOfType<MoveComponent>()->Move(movement);
 	}
 };

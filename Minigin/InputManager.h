@@ -1,6 +1,7 @@
 #pragma once
 #include "Singleton.h"
 #include "MoveCommand.h"
+#include <SDL.h>
 
 namespace dae
 {

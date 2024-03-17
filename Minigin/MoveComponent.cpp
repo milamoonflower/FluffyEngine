@@ -1,6 +1,7 @@
 #include "MoveComponent.h"
 #include "GameObject.h"
 #include <vcruntime_typeinfo.h>
+#include <iostream>
 
 MoveComponent::MoveComponent(const std::weak_ptr<class GameObject> pOwner, float verticalSpeed, float horizontalSpeed)
 	: Component(pOwner)
@@ -23,5 +24,10 @@ void MoveComponent::Update(const float deltaTime)
 
 void MoveComponent::Move(const glm::vec2& input)
 {
-	m_Movement = glm::vec2((input.x * m_HorizontalSpeed), (input.y * m_VerticalSpeed));
+	std::cout << "movement:" << std::endl;
+	std::cout << m_Movement.x << ", " << m_Movement.y << std::endl;
+
+	m_Movement += glm::vec2((input.x * m_HorizontalSpeed), (input.y * m_VerticalSpeed));
+
+	std::cout << m_Movement.x << ", " << m_Movement.y << std::endl;
 }
