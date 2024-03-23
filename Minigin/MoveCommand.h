@@ -7,19 +7,18 @@
 class MoveCommand final : public Command
 {
 public:
-	void Execute(GameObject* pGameObject, SDL_Scancode input) override
-	{
-		glm::vec2 movement{0.0f, 0.0f};
+	MoveCommand(GameObject* pGameObject, glm::vec2 direction, float speed);
+	~MoveCommand() = default;
 
-		if (input == SDL_SCANCODE_W)
-			++movement.y;
-		else if (input == SDL_SCANCODE_A)
-			++movement.x;
-		else if (input == SDL_SCANCODE_S)
-			--movement.y;
-		else if (input == SDL_SCANCODE_D)
-			--movement.x;
+	MoveCommand(const MoveCommand& other) = default;
+	MoveCommand& operator=(const MoveCommand& other) = default;
+	MoveCommand(MoveCommand&& other) = default;
+	MoveCommand& operator=(MoveCommand&& other) = default;
 
-		pGameObject->GetComponentOfType<MoveComponent>()->Move(movement);
-	}
+	void Execute() override;
+
+private:
+	GameObject* m_pGameObject;
+	float m_Speed{};
+	glm::vec2 m_Direction{};
 };

@@ -5,5 +5,5 @@ class Command
 {
 public:
 	virtual ~Command() = default;
-	virtual void Execute(class GameObject*, SDL_Scancode) {};
+	virtual void Execute() {};
 };

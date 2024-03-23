@@ -11,6 +11,7 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "Time.h"
 
 SDL_Window* g_Window{};
 
@@ -88,30 +89,17 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 	bool doContinue = true;
 
-	const float fixedTimeStep{ 0.02f };
-	auto previousTime{ std::chrono::high_resolution_clock::now() };
-	float lag{ 0.0f };
-	const float millisecondsPerFrame{ 1.0f / 60.0f };	// 60 FPS
+	//const float millisecondsPerFrame{ 1.0f / 60.0f };	// 60 FPS
 
 	while (doContinue)
 	{
-		const auto currentTime{ std::chrono::high_resolution_clock::now() };
-		const float deltaTime{ std::chrono::duration<float>(currentTime - previousTime).count() };
-		previousTime = currentTime;
-		lag += deltaTime;
-
+		Time::Update();
 		doContinue = input.ProcessInput();
-		sceneManager.Update(deltaTime);
-
-		while (lag >= fixedTimeStep)
-		{
-			sceneManager.FixedUpdate(fixedTimeStep);
-			lag -= fixedTimeStep;
-		}
+		sceneManager.Update(Time::DeltaTime());
 
 		renderer.Render();
 
-		const auto sleepTime{ currentTime + std::chrono::duration<float>(millisecondsPerFrame) - std::chrono::high_resolution_clock::now() };
-		std::this_thread::sleep_for(sleepTime);
+		//const auto sleepTime{ Time::GetCurrent() + std::chrono::duration<float>(millisecondsPerFrame) - std::chrono::high_resolution_clock::now()};
+		//std::this_thread::sleep_for(sleepTime);
 	}
 }
