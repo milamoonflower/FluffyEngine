@@ -1,7 +1,6 @@
 #pragma once
 #include "Command.h"
 #include "GameObject.h"
-#include "MoveComponent.h"
 #include "glm/glm.hpp"
 
 class MoveCommand final : public Command
