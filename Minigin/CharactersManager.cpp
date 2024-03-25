@@ -63,7 +63,7 @@ void CharactersManager::OnNotify(const EventType& eventType, const IEventParam* 
 
 std::shared_ptr<PlayerCharacter> CharactersManager::GetPlayer(int playerIndex)
 {
-	return playerIndex > 0 && playerIndex <= m_PlayerCharacters.size() ?
+	return playerIndex > 0 && playerIndex <= int(m_PlayerCharacters.size()) ?
 			m_PlayerCharacters[playerIndex - 1] :
 			nullptr;
 }
