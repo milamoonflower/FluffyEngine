@@ -57,6 +57,7 @@ public:
 	void SetWorldPosition(const glm::vec2& position);
 	void SetLocalPosition(const float x, const float y);
 	void SetLocalPosition(const glm::vec2& position);
+	inline void Destroy() { m_IsDestroyed = true; }
 	inline bool IsDestroyed() const { return m_IsDestroyed; }
 	//inline bool IsLocalPositionDirty() const { return m_LocalPositionIsDirty; }
 

@@ -1,8 +1,11 @@
 #include "MoveCommand.h"
 #include "Time.h"
+#include "CharactersManager.h"
+#include "PlayerCharacter.h"
+#include "GameObject.h"
 
-MoveCommand::MoveCommand(GameObject* pGameObject, glm::vec2 direction, float speed)
-	: m_pGameObject(pGameObject)
+MoveCommand::MoveCommand(int playerIndex, glm::vec2 direction, float speed)
+	: m_PlayerIndex(playerIndex)
 	, m_Direction{ direction }
 	, m_Speed{ speed }
 {
@@ -11,7 +14,10 @@ MoveCommand::MoveCommand(GameObject* pGameObject, glm::vec2 direction, float spe
 
 void MoveCommand::Execute()
 {
-	glm::vec2 position{ m_pGameObject->GetWorldPosition() };
-	position += m_Direction * (m_Speed * Time::DeltaTime());
-	m_pGameObject->SetWorldPosition(position);
+	if (std::shared_ptr<GameObject> pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex)->GetGameObject() })
+	{
+		glm::vec2 position{ pPlayer->GetWorldPosition() };
+		position += m_Direction * (m_Speed * Time::DeltaTime());
+		pPlayer->SetWorldPosition(position);
+	}
 }

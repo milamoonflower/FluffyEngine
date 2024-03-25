@@ -1,12 +1,11 @@
 #pragma once
 #include "Command.h"
-#include "GameObject.h"
 #include "glm/glm.hpp"
 
 class MoveCommand final : public Command
 {
 public:
-	MoveCommand(GameObject* pGameObject, glm::vec2 direction, float speed);
+	MoveCommand(int playerIndex, glm::vec2 direction, float speed);
 	~MoveCommand() = default;
 
 	MoveCommand(const MoveCommand& other) = default;
@@ -17,7 +16,7 @@ public:
 	void Execute() override;
 
 private:
-	GameObject* m_pGameObject;
+	int m_PlayerIndex;
 	float m_Speed{};
 	glm::vec2 m_Direction{};
 };

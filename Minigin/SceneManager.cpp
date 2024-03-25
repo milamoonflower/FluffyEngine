@@ -9,14 +9,6 @@ void SceneManager::Update(const float deltaTime)
 	}
 }
 
-void SceneManager::FixedUpdate(const float fixedDeltaTime)
-{
-	for (auto& scene : m_Scenes)
-	{
-		scene->FixedUpdate(fixedDeltaTime);
-	}
-}
-
 void SceneManager::Render()
 {
 	for (const auto& scene : m_Scenes)

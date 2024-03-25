@@ -9,11 +9,11 @@ class Texture2D;
 class Sprite : public Component, public IRenderable
 {
 public:
-	std::string GetTypename() override { return "Sprite"; }
+	std::string GetTypeName() override { return typeid(*this).name(); }
 	void Render() const override;
 	void SetTexture(const std::string& fileName);
 
-	Sprite(std::weak_ptr<GameObject> pOwner, const std::string& fileName);
+	Sprite(const std::weak_ptr<class GameObject> pOwner, const std::string& fileName);
 	virtual ~Sprite() = default;
 	Sprite(const Sprite& other) = delete;
 	Sprite(Sprite&& other) = delete;

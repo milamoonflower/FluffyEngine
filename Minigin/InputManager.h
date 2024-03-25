@@ -1,9 +1,9 @@
 #pragma once
+#include "BaseInputDevice.h"
 #include "Singleton.h"
-#include "MoveCommand.h"
 #include <SDL.h>
 #include <memory>
-#include "BaseInputDevice.h"
+#include <vector>
 
 namespace dae
 {
@@ -24,17 +24,8 @@ namespace dae
 		InputManager(InputManager&& other) = delete;
 		InputManager& operator=(InputManager&& other) = delete;
 
-		template<typename T>
-		void AddDevice(std::unique_ptr<T> pDevice)
-		{
-			m_InputDevices.push_back(std::move(pDevice));
-		}
-
-		template<typename T>
-		void RemoveDevice(std::unique_ptr<T> pDevice)
-		{
-			m_InputDevices.erase(std::ranges::find(m_InputDevices, pDevice));
-		}
+		void AddDevice(std::unique_ptr<BaseInputDevice> pDevice);
+		void RemoveDevice(std::unique_ptr<BaseInputDevice> pDevice);
 
 		bool ProcessInput();
 

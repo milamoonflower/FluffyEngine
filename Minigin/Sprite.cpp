@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 
-Sprite::Sprite(std::weak_ptr<GameObject> pOwner, const std::string& fileName)
+Sprite::Sprite(const std::weak_ptr<GameObject> pOwner, const std::string& fileName)
 	: Component(pOwner)
 {
 	if (!fileName.empty())
@@ -15,7 +15,7 @@ void Sprite::Render() const
 	if (m_pTexture == nullptr)
 		return;
 
-	if (const auto owner{ GetOwner() })
+	if (const auto owner{ GetGameObject() })
 	{
 		const auto& pos = owner->GetWorldPosition();
 		Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);

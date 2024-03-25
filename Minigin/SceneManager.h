@@ -11,7 +11,6 @@ public:
 	Scene& CreateScene(const std::string& name);
 
 	void Update(const float deltaTime);
-	virtual void FixedUpdate(const float fixedDeltaTime);
 	void Render();
 
 private:

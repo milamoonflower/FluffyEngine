@@ -27,17 +27,18 @@ void Scene::RemoveAll()
 
 void Scene::Update(const float deltaTime)
 {
-	for(auto& object : m_GameObjects)
+	for (int i = int(m_GameObjects.size()) - 1; i >= 0; --i)
 	{
-		object->Update(deltaTime);
-	}
-}
+		const auto& object{ m_GameObjects[i] };
 
-void Scene::FixedUpdate(const float fixedDeltaTime)
-{
-	for (auto& object : m_GameObjects)
-	{
-		object->Update(fixedDeltaTime);
+		if (object->IsDestroyed())
+		{
+			Remove(object);
+		}
+		else
+		{
+			object->Update(deltaTime);
+		}
 	}
 }
 

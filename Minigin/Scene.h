@@ -11,7 +11,6 @@ public:
 	void RemoveAll();
 
 	void Update(const float deltaTime);
-	void FixedUpdate(const float fixedDeltaTime);
 	void Render() const;
 
 	~Scene();

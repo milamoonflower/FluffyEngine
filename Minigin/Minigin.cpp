@@ -53,7 +53,7 @@ dae::Minigin::Minigin(const std::string &dataPath)
 	}
 
 	g_Window = SDL_CreateWindow(
-		"Programming 4 assignment",
+		"Galaga",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		640,

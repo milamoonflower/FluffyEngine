@@ -19,7 +19,7 @@ Rotator::Rotator(const std::weak_ptr<GameObject> pOwner, const float angleDegree
 
 void Rotator::Update(const float deltaTime)
 {
-	if (auto owner{ GetOwner() })
+	if (auto owner{ GetGameObject() })
 	{
 		glm::vec2 position{ owner->GetTransform().GetPosition() };
 

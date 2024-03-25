@@ -12,12 +12,14 @@ class Text final : public Component, public IRenderable
 {
 public:
 	void Update(const float deltaTime) override;
-	std::string GetTypename() override { return "Text"; }
+	std::string GetTypeName() override { return typeid(*this).name(); }
 	void Render() const override;
 
 	void SetText(const std::string& text);
 
-	Text(const std::weak_ptr<GameObject> pOwner, const std::string& text, std::shared_ptr<Font> font);
+	Text(const std::weak_ptr<class GameObject> pOwner, const std::string& text, std::shared_ptr<Font> font);
+	Text(const std::weak_ptr<class GameObject> pOwner, const std::string& text, const std::string& path, int fontSize);
+
 	virtual ~Text() = default;
 	Text(const Text& other) = delete;
 	Text(Text&& other) = delete;

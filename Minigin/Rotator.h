@@ -11,7 +11,7 @@ public:
 	Rotator(const std::weak_ptr<GameObject> pOwner, const float angleDegrees, const float centerX, const float centerY);
 	~Rotator() = default;
 	void Update(const float deltaTime) override;
-	std::string GetTypename() override { return "Rotator"; }
+	std::string GetTypeName() override { return typeid(*this).name(); }
 	inline void SetRotationAngle(const float angleDegrees) { m_RotationAngleDegrees = angleDegrees; }
 	inline void SetRotationCenter(const glm::vec2& center) { m_RotationCenter = center; }
 	inline void SetRotationCenter(const float centerX, const float centerY) { m_RotationCenter = glm::vec2(centerX, centerY); }
