@@ -4,9 +4,9 @@
 #include <format>
 #include <iomanip>
 
-FPSCounter::FPSCounter(const std::weak_ptr<GameObject> pOwner, const std::weak_ptr<Text> pText)
+FPSCounter::FPSCounter(GameObject* pOwner, Text* pText)
 	: Component(pOwner)
-	, m_pText{ pText.lock() }
+	, m_pText{ pText }
 {
 
 }

@@ -1,7 +1,7 @@
 #include "Rotator.h"
 #include "GameObject.h"
 
-Rotator::Rotator(const std::weak_ptr<GameObject> pOwner, const float angleDegrees, const glm::vec2& center)
+Rotator::Rotator(GameObject* pOwner, const float angleDegrees, const glm::vec2& center)
 	: Component(pOwner)
 	, m_RotationAngleDegrees{ angleDegrees }
 	, m_RotationCenter{ center }
@@ -9,7 +9,7 @@ Rotator::Rotator(const std::weak_ptr<GameObject> pOwner, const float angleDegree
 
 }
 
-Rotator::Rotator(const std::weak_ptr<GameObject> pOwner, const float angleDegrees, const float centerX, const float centerY)
+Rotator::Rotator(GameObject* pOwner, const float angleDegrees, const float centerX, const float centerY)
 	: Component(pOwner)
 	, m_RotationAngleDegrees{ angleDegrees }
 	, m_RotationCenter{ glm::vec2(centerX, centerY) }
@@ -19,24 +19,21 @@ Rotator::Rotator(const std::weak_ptr<GameObject> pOwner, const float angleDegree
 
 void Rotator::Update(const float deltaTime)
 {
-	if (auto owner{ GetGameObject() })
-	{
-		glm::vec2 position{ owner->GetTransform().GetPosition() };
+	glm::vec2 position{ m_pOwner->GetTransform().GetPosition() };
 
-		const float anglesRad{ m_RotationAngleDegrees * (PI / 180.0f) * deltaTime };
+	const float anglesRad{ m_RotationAngleDegrees * (PI / 180.0f) * deltaTime };
 
-		const float c{ (float)cos(-anglesRad) };
-		const float s{ (float)sin(-anglesRad) };
+	const float c{ (float)cos(-anglesRad) };
+	const float s{ (float)sin(-anglesRad) };
 
-		position.x -= m_RotationCenter.x;
-		position.y -= m_RotationCenter.y;
+	position.x -= m_RotationCenter.x;
+	position.y -= m_RotationCenter.y;
 
-		float x = (position.x * c) - (position.y * s);
-		float y = (position.x * s) + (position.y * c);
+	float x = (position.x * c) - (position.y * s);
+	float y = (position.x * s) + (position.y * c);
 
-		x += m_RotationCenter.x;
-		y += m_RotationCenter.y;
+	x += m_RotationCenter.x;
+	y += m_RotationCenter.y;
 
-		owner->SetLocalPosition(x, y);
-	}
+	m_pOwner->SetLocalPosition(x, y);
 }

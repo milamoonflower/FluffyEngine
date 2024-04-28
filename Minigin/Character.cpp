@@ -1,7 +1,7 @@
 #include "Character.h"
 #include "IEventParam.h"
 
-Character::Character(const std::weak_ptr<GameObject> pOwner, int livesCount)
+Character::Character(GameObject* pOwner, int livesCount)
 	: Component(pOwner)
 	, m_LivesCount{ livesCount }
 {

@@ -5,46 +5,61 @@
 #include <unordered_map>
 #include "Transform.h"
 
-class Texture2D;
 class Component;
 
 class GameObject final
 {
 public:
 	template<typename T>
-	void AddComponent(const std::weak_ptr<T> pComponent)
+	T* AddComponent(const std::unique_ptr<Component>&& pComponent)
 	{
-		const auto component{ pComponent.lock() };
+		Component* pRawComponent{ pComponent.get() };
 
-		if (component)
+		if (pRawComponent)
 		{
-			const std::string name = typeid(component.get()).name();
+			const std::string name = typeid(T).name();
 
 			m_Components.try_emplace(name);
-			m_Components[name].push_back(pComponent.lock());
+			m_Components[name].push_back(std::move(pComponent));
+			m_RawComponents.push_back(pRawComponent);
 		}
+
+		return reinterpret_cast<T*>(pRawComponent);
 	}
 
 	template<typename T>
 	T* GetComponentOfType()
 	{
-		const std::string name{ typeid(T*).name() };
+		const std::string name{ typeid(T).name() };
 		return reinterpret_cast<T*>(m_Components[name][0].get());
 	}
 
 	template<typename T>
-	const std::vector<std::shared_ptr<Component>>& GetComponentsOfType()
+	const std::vector<Component*>& GetComponentsOfType()
 	{
-		const std::string name{ typeid(T*).name() };
-		return m_Components[name];
+		const std::string name{ typeid(T).name() };
+		std::vector<T*> components{};
+
+		for (const auto& component : m_Components[name])
+		{
+			components.push_back(component.get());
+		}
+
+		return components;
 	}
 
-	inline const std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>>& GetAllComponents() const { return m_Components; }
+	const std::vector<Component*>& GetAllComponents() const;
 	
 	template<typename T>
 	void RemoveAllComponentsOfType()
 	{
 		const std::string name{ typeid(T).name() };
+
+		for (int i{m_Components[name].size()}; i > 0; --i)
+		{
+			m_RawComponents.erase(std::ranges::find(m_RawComponents, m_Components[name][i]));
+		}
+
 		m_Components.erase(name);
 	}
 	void Update(const float deltaTime);
@@ -70,6 +85,7 @@ public:
 	GameObject& operator=(GameObject&& other) = delete;
 
 private:
+	std::vector<Component*> m_RawComponents{};
 	Transform m_LocalTransform{};
 	//bool m_LocalPositionIsDirty{ false };
 	bool m_IsDestroyed{ false };
@@ -77,7 +93,7 @@ private:
 	GameObject* m_pParent{ };
 	std::vector<GameObject*> m_Children{ };
 
-	std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> m_Components;
+	std::unordered_map<std::string, std::vector<std::unique_ptr<Component>>> m_Components;
 
 	void AddChild(GameObject* pChild);
 	void RemoveChild(GameObject* pChild);

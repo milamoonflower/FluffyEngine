@@ -5,12 +5,11 @@
 #include "CharactersManager.h"
 #include <sstream>
 
-ScoreComponent::ScoreComponent(const std::weak_ptr<GameObject> pOwner, int playerIndex, const std::string& fontPath, int fontSize)
+ScoreComponent::ScoreComponent(GameObject* pOwner, int playerIndex, const std::string& fontPath, int fontSize)
 	: Component(pOwner)
 	, m_PlayerIndex{ playerIndex }
 {
-	m_pText = std::make_shared<Text>(pOwner, GetScoreString(), fontPath, fontSize);
-	pOwner.lock()->AddComponent<Text>(m_pText);
+	m_pText = pOwner->AddComponent<Text>(std::make_unique<Text>(pOwner, GetScoreString(), fontPath, fontSize));
 
 	CharactersManager::GetInstance().GetOnEnemyKilled().AddListener(this);
 }

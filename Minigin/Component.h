@@ -5,20 +5,23 @@
 class Component
 {
 public:
+
+	Component(class GameObject* pOwner)
+		: m_pOwner{ pOwner }
+	{
+	}
 	virtual ~Component() = default;
 	virtual void Update(const float /*deltaTime*/) {}
 	virtual std::string GetTypeName() = 0;
 
-	Component(const Component& other) = delete;
-	Component(Component&& other) = delete;
-	Component& operator=(const Component& other) = delete;
-	Component& operator=(Component&& other) = delete;
+	inline class GameObject* GetGameObject() const { return m_pOwner; }
 
-	std::shared_ptr<class GameObject> GetGameObject() const;
+	Component(const Component&) = delete;
+	Component(Component &&) = delete;
+	Component& operator=(const Component&) = delete;
+	Component& operator=(Component&&) = delete;
 
 protected:
-	Component(const std::weak_ptr<class GameObject> pOwner);
 
-private:
-	std::weak_ptr<class GameObject> m_pOwner;
+	class GameObject* m_pOwner;
 };

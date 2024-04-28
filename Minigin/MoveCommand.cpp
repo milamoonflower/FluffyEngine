@@ -14,7 +14,7 @@ MoveCommand::MoveCommand(int playerIndex, glm::vec2 direction, float speed)
 
 void MoveCommand::Execute()
 {
-	if (std::shared_ptr<GameObject> pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex)->GetGameObject() })
+	if (GameObject* pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex)->GetGameObject() })
 	{
 		glm::vec2 position{ pPlayer->GetWorldPosition() };
 		position += m_Direction * (m_Speed * Time::DeltaTime());

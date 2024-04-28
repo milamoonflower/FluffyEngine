@@ -6,7 +6,7 @@
 class HealthDisplayComponent final : public Component, IEventListener
 {
 public:
-	HealthDisplayComponent(const std::weak_ptr<class GameObject> pOwner, int playerIndex, const std::string& fontPath, int fontSize);
+	HealthDisplayComponent(class GameObject* pOwner, int playerIndex, const std::string& fontPath, int fontSize);
 	~HealthDisplayComponent();
 	std::string GetTypeName() override { return typeid(*this).name(); }
 
@@ -14,7 +14,7 @@ public:
 
 private:
 	const int m_PlayerIndex;
-	std::shared_ptr<class Text> m_pText;
+	class Text* m_pText;
 
 	std::string GetLivesString() const;
 };

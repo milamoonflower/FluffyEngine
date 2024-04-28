@@ -22,7 +22,7 @@ public:
 	inline void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
 
 private:
-	SDL_Renderer* m_pRenderer{};
-	SDL_Window* m_pWindow{};
+	struct SDL_Renderer* m_pRenderer{};
+	struct SDL_Window* m_pWindow{};
 	SDL_Color m_ClearColor{};
 };

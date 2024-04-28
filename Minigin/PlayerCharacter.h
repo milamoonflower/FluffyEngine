@@ -3,7 +3,7 @@
 class PlayerCharacter final : public Character
 {
 public:
-	PlayerCharacter(const std::weak_ptr<class GameObject> pOwner, int livesCount, int playerIndex);
+	PlayerCharacter(class GameObject* pOwner, int livesCount, int playerIndex);
 	~PlayerCharacter() = default;
 
 	PlayerCharacter(const PlayerCharacter&) = delete;

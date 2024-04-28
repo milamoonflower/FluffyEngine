@@ -13,6 +13,11 @@ GameObject::GameObject(const float x, const float y)
 	SetWorldPosition(x, y);
 }
 
+const std::vector<Component*>& GameObject::GetAllComponents() const
+{
+	return m_RawComponents;
+}
+
 void GameObject::Update(const float deltaTime)
 {
 	for (const auto& components : m_Components)

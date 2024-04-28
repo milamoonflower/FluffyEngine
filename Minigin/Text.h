@@ -17,14 +17,14 @@ public:
 
 	void SetText(const std::string& text);
 
-	Text(const std::weak_ptr<class GameObject> pOwner, const std::string& text, std::shared_ptr<Font> font);
-	Text(const std::weak_ptr<class GameObject> pOwner, const std::string& text, const std::string& path, int fontSize);
+	Text(class GameObject* pOwner, const std::string& text, std::shared_ptr<Font> font);
+	Text(class GameObject* pOwner, const std::string& text, const std::string& path, int fontSize);
 
 	virtual ~Text() = default;
-	Text(const Text& other) = delete;
-	Text(Text&& other) = delete;
-	Text& operator=(const Text& other) = delete;
-	Text& operator=(Text&& other) = delete;
+	Text(const Text&) = delete;
+	Text(Text&&) = delete;
+	Text& operator=(const Text&) = delete;
+	Text& operator=(Text&&) = delete;
 
 private:
 	bool m_NeedsUpdate;

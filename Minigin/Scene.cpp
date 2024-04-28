@@ -46,7 +46,17 @@ void Scene::Render() const
 {
 	for (const auto& object : m_GameObjects)
 	{
-		const std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> components{ object->GetAllComponents() };
+		const std::vector<Component*> components{ object->GetAllComponents() };
+
+		for (auto& component : components)
+		{
+			if (IRenderable* renderable = dynamic_cast<IRenderable*>(component))
+			{
+				renderable->Render();
+			}
+		}
+
+		/*const std::unordered_map<std::string, std::vector<std::unique_ptr<Component>>> components{ object->GetAllComponents() };
 
 		for (auto& type : components)
 		{
@@ -58,6 +68,6 @@ void Scene::Render() const
 					renderable->Render();
 				}
 			}
-		}
+		}*/
 	}
 }

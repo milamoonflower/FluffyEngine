@@ -4,7 +4,7 @@
 class EnemyCharacter final : public Character
 {
 public:
-	EnemyCharacter(const std::weak_ptr<class GameObject> pOwner);
+	EnemyCharacter(class GameObject* pOwner);
 	~EnemyCharacter() = default;
 
 	/*EnemyCharacter(const EnemyCharacter&) = delete;

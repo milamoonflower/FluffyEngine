@@ -8,7 +8,7 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 
-Text::Text(const std::weak_ptr<GameObject> pOwner, const std::string& text, std::shared_ptr<Font> font)
+Text::Text(GameObject* pOwner, const std::string& text, std::shared_ptr<Font> font)
 	: Component(pOwner)
 	, m_NeedsUpdate(true)
 	, m_Text(text)
@@ -18,7 +18,7 @@ Text::Text(const std::weak_ptr<GameObject> pOwner, const std::string& text, std:
 
 }
 
-Text::Text(const std::weak_ptr<GameObject> pOwner, const std::string& text, const std::string& path, int fontSize)
+Text::Text(GameObject* pOwner, const std::string& text, const std::string& path, int fontSize)
 	: Component(pOwner)
 	, m_NeedsUpdate(true)
 	, m_Text(text)
@@ -56,11 +56,8 @@ void Text::Render() const
 	if (m_pTextTexture == nullptr)
 		return;
 
-	if (const auto owner{ GetGameObject() })
-	{
-		const auto& pos = owner->GetWorldPosition();
-		Renderer::GetInstance().RenderTexture(*m_pTextTexture, pos.x, pos.y);
-	}
+	const auto& pos = m_pOwner->GetWorldPosition();
+	Renderer::GetInstance().RenderTexture(*m_pTextTexture, pos.x, pos.y);
 }
 
 // This implementation uses the "dirty flag" pattern

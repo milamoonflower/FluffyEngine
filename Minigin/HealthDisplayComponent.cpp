@@ -6,22 +6,21 @@
 #include "CharactersManager.h"
 #include <sstream>
 
-HealthDisplayComponent::HealthDisplayComponent(const std::weak_ptr<GameObject> pOwner, int playerIndex, const std::string& fontPath, int fontSize)
+HealthDisplayComponent::HealthDisplayComponent(GameObject* pOwner, int playerIndex, const std::string& fontPath, int fontSize)
 	: Component(pOwner)
 	, m_PlayerIndex{ playerIndex }
 {
-	if (std::shared_ptr<PlayerCharacter> pPlayer{ CharactersManager::GetInstance().GetPlayer(playerIndex) })
+	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance().GetPlayer(playerIndex) })
 	{
 		pPlayer->GetOnDeath().AddListener(this);
 	}
 
-	m_pText = std::make_shared<Text>(pOwner, GetLivesString(), fontPath, fontSize);
-	pOwner.lock()->AddComponent<Text>(m_pText);
+	m_pText = pOwner->AddComponent<Text>(std::make_unique<Text>(pOwner, GetLivesString(), fontPath, fontSize));
 }
 
 HealthDisplayComponent::~HealthDisplayComponent()
 {
-	if (std::shared_ptr<PlayerCharacter> pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex) })
+	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex) })
 	{
 		pPlayer->GetOnDeath().RemoveListener(this);
 	}
@@ -44,7 +43,7 @@ std::string HealthDisplayComponent::GetLivesString() const
 
 	int lives{ 0 };
 
-	if (std::shared_ptr<PlayerCharacter> pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex) })
+	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex) })
 	{
 		lives = pPlayer->GetLivesCount();
 	}

@@ -1,5 +1,4 @@
 #include "InputManager.h"
-#include "backends/imgui_impl_sdl2.h"
 #include <SDL.h>
 
 void dae::InputManager::AddDevice(std::unique_ptr<BaseInputDevice> pDevice)

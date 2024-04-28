@@ -7,8 +7,8 @@ constexpr float PI{ 3.14159f };
 class Rotator final : public Component
 {
 public:
-	Rotator(const std::weak_ptr<GameObject> pOwner, const float angleDegrees, const glm::vec2& center);
-	Rotator(const std::weak_ptr<GameObject> pOwner, const float angleDegrees, const float centerX, const float centerY);
+	Rotator(class GameObject* pOwner, const float angleDegrees, const glm::vec2& center);
+	Rotator(class GameObject* pOwner, const float angleDegrees, const float centerX, const float centerY);
 	~Rotator() = default;
 	void Update(const float deltaTime) override;
 	std::string GetTypeName() override { return typeid(*this).name(); }

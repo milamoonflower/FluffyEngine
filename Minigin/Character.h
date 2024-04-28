@@ -13,7 +13,7 @@ public:
 	void Kill(int killerIndex = 0);
 
 protected:
-	Character(const std::weak_ptr<GameObject> pOwner, int livesCount);
+	Character(class GameObject* pOwner, int livesCount);
 	
 	int m_LivesCount;
 

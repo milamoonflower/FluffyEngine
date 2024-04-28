@@ -78,7 +78,7 @@ void Keyboard::HandleInput()
 	}
 }
 
-void Keyboard::AddCommand(KeyboardInput input, std::unique_ptr<class Command> command)
+void Keyboard::AddCommand(KeyboardInput input, std::unique_ptr<Command> command)
 {
 	m_KeyBindings.insert({ input, std::move(command) });
 }
