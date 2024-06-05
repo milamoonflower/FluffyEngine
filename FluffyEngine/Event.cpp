@@ -19,6 +19,9 @@ namespace Fluffy
 
 	void Event::RemoveListener(class IEventListener* pListener)
 	{
+		if (m_Listeners.empty())
+			return;
+
 		const auto& it{ std::ranges::find(m_Listeners, pListener) };
 
 		if (it != m_Listeners.end())
