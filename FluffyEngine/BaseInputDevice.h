@@ -6,7 +6,7 @@ namespace Fluffy
 	{
 		Pressed,
 		Released,
-		Previous
+		Held
 	};
 
 	class BaseInputDevice
@@ -18,7 +18,7 @@ namespace Fluffy
 
 		virtual bool IsPressed(unsigned int) = 0;
 		virtual bool IsReleased(unsigned int) = 0;
-		virtual bool IsPrevious(unsigned int) = 0;
+		virtual bool IsHeld(unsigned int) = 0;
 
 		virtual void HandleInput() = 0;
 	};
