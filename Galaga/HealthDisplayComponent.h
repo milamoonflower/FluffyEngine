@@ -8,9 +8,6 @@ namespace Fluffy
 	class Component;
 	class GameObject;
 	class Sprite;
-	class IEventListener;
-	class Event;
-	class Text;
 }
 
 class HealthDisplayComponent final : public Fluffy::Component, Fluffy::IEventListener

@@ -11,30 +11,30 @@ namespace Fluffy
 		{
 		}
 
-		Rectf(float left, float bottom, float width, float height)
+		Rectf(float left, float top, float width, float height)
 			: left{ left }
-			, bottom{ bottom }
+			, top{ top }
 			, width{ width }
 			, height{ height }
 		{
 		}
 
-		Rectf(const glm::vec2& bottomLeft, const glm::vec2& size)
-			: left{ bottomLeft.x }
-			, bottom{ bottomLeft.y }
+		Rectf(const glm::vec2& topLeft, const glm::vec2& size)
+			: left{ topLeft.x }
+			, top{ topLeft.y }
 			, width{ size.x }
 			, height{ size.y }
 		{
 		}
 
 		float left;
-		float bottom;
+		float top;
 		float width;
 		float height;
 
-		float Top() const
+		float Bottom() const
 		{
-			return bottom + height;
+			return top + height;
 		}
 
 		float Right() const
@@ -44,7 +44,7 @@ namespace Fluffy
 
 		glm::vec2 Center() const
 		{
-			return { left + (width / 2.0f), bottom + (height / 2.0f) };
+			return { left + (width / 2.0f), top + (height / 2.0f) };
 		}
 	};
 }

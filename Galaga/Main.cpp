@@ -31,6 +31,8 @@
 #include "MoveCommand.h"
 #include "ShootCommand.h"
 #include "BulletsManager.h"
+#include "CollidersHandler.h"
+#include "CollisionLayers.h"
 #include "Structs.h"
 /*
 #include "SDLSoundSystem.h"
@@ -40,6 +42,8 @@ using namespace Fluffy;
 
 static void CreateLevel1()
 {
+	CollidersHandler::GetInstance().RegisterCollisionLayers(CollisionLayers::LAYERS, CollisionLayers::LAYER_INTERACTIONS);
+
 	auto& scene = SceneManager::GetInstance().CreateScene("Level1");
 
 	const auto font{ ResourceManager::GetInstance().LoadFont("Lingua.otf", 15) };
@@ -102,7 +106,6 @@ static void CreateLevel1()
 
 	ServiceLocator::GetSoundSystem()->AddSFX("../Data/sound.wav", 1);
 	ServiceLocator::GetSoundSystem()->Play(1, 30);*/
-
 
 	CharactersManager::GetInstance()->StartLevel1();
 }

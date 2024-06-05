@@ -6,6 +6,7 @@
 #include "IEventParam.h"
 #include <algorithm>
 #include <iterator>
+#include <iostream>
 
 namespace Fluffy
 {
@@ -30,7 +31,7 @@ namespace Fluffy
 
 	void RectColliderComponent::Update(const float /*deltaTime*/)
 	{
-		const auto& colliders{ CollidersHandler::GetInstance().GetAllColliderComponents() };
+		const auto& colliders{ CollidersHandler::GetInstance().GetInteractableColliders(m_CollisionLayerName) };
 		std::vector<RectColliderComponent*> currentCollisions{};
 
 		for (const auto& pCollider : colliders)
@@ -45,9 +46,14 @@ namespace Fluffy
 		}
 
 		std::vector<RectColliderComponent*> exitCollisions{};
-		std::ranges::set_difference(m_CurrentCollisions, currentCollisions, std::back_inserter(exitCollisions));
+		std::ranges::copy_if(m_CurrentCollisions, std::back_inserter(exitCollisions),
+			[&currentCollisions](const auto& pCollision)
+			{
+				// find all the colliders that are still in m_CurrentCollisions (old collisions) but NOT in currentCollisions
+				return std::ranges::find(currentCollisions, pCollision) == currentCollisions.end();
+			});
 
-		std::ranges::for_each(exitCollisions, [this](RectColliderComponent* pCollider)
+		std::ranges::for_each(exitCollisions, [this, currentCollisions](RectColliderComponent* pCollider)
 			{
 				const CollisionParam param{ this, pCollider };
 				m_OnCollisionExit.Invoke(&param);
@@ -76,7 +82,7 @@ namespace Fluffy
 			return false;
 
 		// If one rectangle is under the other
-		if (r1.bottom > r2.Top() || r2.bottom > r1.Top())
+		if (r1.top > r2.Bottom() || r2.top > r1.Bottom())
 			return false;
 
 		return true;

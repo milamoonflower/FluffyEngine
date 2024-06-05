@@ -232,6 +232,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseInputDevice.cpp" />
+    <ClCompile Include="CollidersHandler.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Controller.cpp" />
