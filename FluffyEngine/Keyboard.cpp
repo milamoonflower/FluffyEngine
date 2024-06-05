@@ -2,6 +2,7 @@
 #include "Command.h"
 #include <functional>
 #include <algorithm>
+#include <iostream>
 
 namespace Fluffy
 {
@@ -39,7 +40,7 @@ namespace Fluffy
 		return m_ReleasedKeys[key];
 	}
 
-	bool Keyboard::IsPrevious(unsigned int key)
+	bool Keyboard::IsHeld(unsigned int key)
 	{
 		return m_PreviousKeys[key];
 	}
@@ -50,30 +51,25 @@ namespace Fluffy
 		{
 			switch (binding.first.inputState)
 			{
-			case InputState::Previous:
+			case InputState::Held:
 			{
-				if (IsPrevious(binding.first.key))
-				{
+				if (IsHeld(binding.first.key))
 					binding.second->Execute();
-				}
 
 				break;
 			}
 			case InputState::Pressed:
 			{
 				if (IsPressed(binding.first.key))
-				{
 					binding.second->Execute();
-				}
 
 				break;
 			}
 			case InputState::Released:
 			{
 				if (IsReleased(binding.first.key))
-				{
 					binding.second->Execute();
-				}
+
 				break;
 			}
 			}

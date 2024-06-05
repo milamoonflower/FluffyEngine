@@ -63,7 +63,7 @@ namespace Fluffy
 
 		bool IsPressed(unsigned int button) override;
 		bool IsReleased(unsigned int button) override;
-		bool IsPrevious(unsigned int button) override;
+		bool IsHeld(unsigned int button) override;
 
 		void HandleInput() override;
 

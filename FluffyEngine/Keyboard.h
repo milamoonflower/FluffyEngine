@@ -54,7 +54,7 @@ namespace Fluffy
 
 		bool IsPressed(unsigned int key) override;
 		bool IsReleased(unsigned int key) override;
-		bool IsPrevious(unsigned int key) override;
+		bool IsHeld(unsigned int key) override;
 
 		void HandleInput() override;
 

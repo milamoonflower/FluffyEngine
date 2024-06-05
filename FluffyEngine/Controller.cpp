@@ -51,7 +51,7 @@ namespace Fluffy
 		return m_ReleasedButtons & button;
 	}
 
-	bool Controller::IsPrevious(unsigned int button)
+	bool Controller::IsHeld(unsigned int button)
 	{
 		return m_PreviousButtons & button;
 	}
@@ -62,9 +62,9 @@ namespace Fluffy
 		{
 			switch (binding.first.inputState)
 			{
-			case InputState::Previous:
+			case InputState::Held:
 			{
-				if (IsPrevious(unsigned int(binding.first.button)))
+				if (IsHeld(unsigned int(binding.first.button)))
 				{
 					binding.second->Execute();
 				}
