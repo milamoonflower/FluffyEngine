@@ -10,7 +10,6 @@ namespace Fluffy
 	class Sprite : public Component, public IRenderable
 	{
 	public:
-		std::string GetTypeName() override { return typeid(*this).name(); }
 		void Render() const override;
 		void SetTexture(const std::string& fileName);
 		inline glm::vec2 GetTextureSize() const { return m_pTexture->GetSize(); }

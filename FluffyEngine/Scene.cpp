@@ -14,7 +14,8 @@ namespace Fluffy
 
 	void Scene::Add(std::shared_ptr<GameObject> object)
 	{
-		m_GameObjects.emplace_back(std::move(object));
+		object->SetCurrentScene(this);
+		m_NewlyAddedGameObjects.push(m_GameObjects.emplace_back(std::move(object)).get());
 	}
 
 	void Scene::Remove(std::shared_ptr<GameObject> object)
@@ -29,6 +30,12 @@ namespace Fluffy
 
 	void Scene::Update(const float deltaTime)
 	{
+		while (!m_NewlyAddedGameObjects.empty())
+		{
+			m_NewlyAddedGameObjects.front()->Start();
+			m_NewlyAddedGameObjects.pop();
+		}
+
 		for (int i = int(m_GameObjects.size()) - 1; i >= 0; --i)
 		{
 			const auto& object{ m_GameObjects[i] };
@@ -48,13 +55,19 @@ namespace Fluffy
 	{
 		for (const auto& object : m_GameObjects)
 		{
+			if (!object->IsActive())
+				continue;
+
 			const std::vector<Component*> components{ object->GetAllComponents() };
 
 			for (auto& component : components)
 			{
-				if (IRenderable* renderable = dynamic_cast<IRenderable*>(component))
+				if (component->IsEnabled())
 				{
-					renderable->Render();
+					if (IRenderable* renderable = dynamic_cast<IRenderable*>(component))
+					{
+						renderable->Render();
+					}
 				}
 			}
 		}

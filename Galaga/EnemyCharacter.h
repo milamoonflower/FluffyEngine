@@ -17,6 +17,5 @@ public:
 	EnemyCharacter& operator=(const EnemyCharacter&) = delete;
 	EnemyCharacter& operator=(EnemyCharacter&&) = delete;*/
 
-	std::string GetTypeName() override { return typeid(*this).name(); }
 };
 

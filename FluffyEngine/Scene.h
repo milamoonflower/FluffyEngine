@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneManager.h"
+#include <queue>
 
 namespace Fluffy
 {
@@ -26,6 +27,7 @@ namespace Fluffy
 
 		const std::string m_Name;
 		std::vector<std::shared_ptr<GameObject>> m_GameObjects{};
+		std::queue<GameObject*> m_NewlyAddedGameObjects{};
 
 		static unsigned int m_idCounter;
 	};

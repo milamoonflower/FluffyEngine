@@ -5,7 +5,5 @@
 
 class AchievementComponent : public Fluffy::Component, Fluffy::IEventListener
 {
-	// Inherited via Component
 
-	std::string GetTypeName() override { return typeid(*this).name(); }
 };

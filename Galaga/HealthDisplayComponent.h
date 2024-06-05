@@ -17,7 +17,6 @@ class HealthDisplayComponent final : public Fluffy::Component, Fluffy::IEventLis
 public:
 	HealthDisplayComponent(Fluffy::GameObject* pOwner, int playerIndex, const std::string& fontPath, int fontSize);
 	~HealthDisplayComponent();
-	std::string GetTypeName() override { return typeid(*this).name(); }
 
 	void OnNotify(const Fluffy::EventType& eventType, const struct Fluffy::IEventParam* param) override;
 

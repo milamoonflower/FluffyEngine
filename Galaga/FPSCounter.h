@@ -13,7 +13,6 @@ class FPSCounter : public Fluffy::Component
 public:
 	FPSCounter(Fluffy::GameObject* pOwner, Fluffy::Text* pText);
 	void Update(const float deltaTime) override;
-	std::string GetTypeName() override { return typeid(*this).name(); }
 	inline float GetCurrentFPS() const { return m_FPS; }
 
 private:

@@ -13,10 +13,13 @@ namespace Fluffy
 		{
 		}
 		virtual ~Component() = default;
+		virtual void Awake() {}
+		virtual void Start() {}
 		virtual void Update(const float /*deltaTime*/) {}
-		virtual std::string GetTypeName() = 0;
 
 		inline class GameObject* GetGameObject() const { return m_pOwner; }
+		inline bool IsEnabled() const { return m_Enabled; }
+		inline void SetEnabled(bool enabled) { m_Enabled = enabled; }
 
 		Component(const Component&) = delete;
 		Component(Component&&) = delete;
@@ -26,5 +29,6 @@ namespace Fluffy
 	protected:
 
 		class GameObject* m_pOwner;
+		bool m_Enabled{ true };
 	};
 }

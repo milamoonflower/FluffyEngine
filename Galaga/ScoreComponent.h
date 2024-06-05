@@ -17,7 +17,6 @@ class ScoreComponent final: public Fluffy::Component, Fluffy::IEventListener
 public:
 	ScoreComponent(Fluffy::GameObject* pOwner, int playerIndex, const std::string& fontPath, int fontSize);
 	~ScoreComponent();
-	std::string GetTypeName() override { return typeid(*this).name(); }
 
 	void OnNotify(const Fluffy::EventType& eventType, const struct Fluffy::IEventParam* pParam) override;
 

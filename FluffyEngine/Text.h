@@ -14,7 +14,7 @@ namespace Fluffy
 	{
 	public:
 		void Update(const float deltaTime) override;
-		std::string GetTypeName() override { return typeid(*this).name(); }
+		//std::string GetTypeName() override { return typeid(*this).name(); }
 		void Render() const override;
 
 		void SetText(const std::string& text);
