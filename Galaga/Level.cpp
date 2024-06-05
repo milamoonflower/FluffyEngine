@@ -30,7 +30,7 @@ void Level::Update(const float deltaTime)
 		{
 			EnemyCharacter* pEnemy{ CharactersManager::GetInstance()->SpawnEnemy(data) };
 
-			pEnemy->GetFSM().GetBlackboard().SetData(ENTERING_PATH_PARAM, data.path);
+			pEnemy->SetEnteringPath(data.path);
 			pEnemy->SetState(EnemyStates::Entering);
 			m_Enemies.push_back(pEnemy);
 

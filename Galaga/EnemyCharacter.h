@@ -27,6 +27,9 @@ public:
 	void SetState(EnemyStates newState);
 	FiniteStateMachine& GetFSM() { return m_FSM; }
 	inline float GetSpeed() const { return m_Speed; }
+	inline const BezierPath& GetEnteringPath() const { return m_EnteringPath; }
+	inline const BezierPath& GetExitingPath() const { return m_ExitingPath; }
+	inline void SetEnteringPath(const BezierPath& path) { m_EnteringPath = path; }
 
 	void Kill(int killerIndex = INVALID_PLAYER_INDEX) override;
 
@@ -35,18 +38,18 @@ protected:
 	void OnCollisionEnter(Fluffy::GameObject* pOtherGameObject) override;
 
 private:
+	BezierPath m_EnteringPath{};
 	BezierPath m_ExitingPath{};
 
 	EnemyType m_Type{};
 	EnemyStates m_State{ EnemyStates::None };
 	FiniteStateMachine m_FSM{};
 
-	EnemyEnteringState m_EnteringState{};
-	EnemyIdleState m_IdleState{};
-	EnemyExitingState m_ExitingState{};
+	EnemyEnteringState m_EnteringState;
+	EnemyIdleState m_IdleState;
+	EnemyExitingState m_ExitingState;
 
 	float m_Speed{ 10.0f };
 
 	void CreateExitingPath();
 };
-

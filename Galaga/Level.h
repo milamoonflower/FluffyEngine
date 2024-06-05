@@ -10,6 +10,7 @@ namespace Fluffy
 	struct IEventParam;
 }
 
+// Level knows when to spawn enemies but still goes though characters manager
 class Level final : public Fluffy::IEventListener
 {
 public:

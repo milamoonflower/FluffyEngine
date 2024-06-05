@@ -7,11 +7,11 @@ EnemyCharacter::EnemyCharacter(Fluffy::GameObject* pOwner, const EnemyType type,
 	: Character(pOwner, 1)
 	, m_Type{ type }
 	, m_Speed{ speed }
+	, m_EnteringState{ this }
+	, m_IdleState{ this }
+	, m_ExitingState{ this }
 {
-	m_FSM.GetBlackboard().SetData(OWNER_PARAM, this);
-
 	CreateExitingPath();
-	m_FSM.GetBlackboard().SetData(EXITING_PATH_PARAM, m_ExitingPath);
 }
 
 void EnemyCharacter::Update(const float deltaTime)
@@ -60,5 +60,8 @@ void EnemyCharacter::CreateExitingPath()
 {
 	const BezierCurve lineDown{ { 0.0f, 0.0f }, { 0.0f, 0.0f },
 								{ 0.0f, 480.0f }, { 0.0f, 480.0f } };
+	const BezierCurve lineUp{ { 0.0f, 480.0f }, { 0.0f, 480.0f },
+								{ 0.0f, 0.0f }, { 0.0f, 0.0f } };
 	m_ExitingPath.AddCurve(lineDown, 1);
+	m_ExitingPath.AddCurve(lineUp, 1);
 }

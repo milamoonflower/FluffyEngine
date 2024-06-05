@@ -5,11 +5,11 @@ void FiniteStateMachine::Update(float deltaTime)
 {
 	if (m_pCurrentState != nullptr)
 	{
-		m_pCurrentState->Update(m_Blackboard, deltaTime);
+		m_pCurrentState->Update(deltaTime);
 	}
 }
 
-void FiniteStateMachine::EnterState(const FSMState* newState)
+void FiniteStateMachine::EnterState(FSMState* newState)
 {
 	ExitCurrentState();
 
@@ -17,7 +17,7 @@ void FiniteStateMachine::EnterState(const FSMState* newState)
 
 	if (m_pCurrentState != nullptr)
 	{
-		m_pCurrentState->OnEnter(m_Blackboard);
+		m_pCurrentState->OnEnter();
 	}
 }
 
@@ -25,7 +25,7 @@ void FiniteStateMachine::ExitCurrentState()
 {
 	if (m_pCurrentState != nullptr)
 	{
-		m_pCurrentState->OnExit(m_Blackboard);
+		m_pCurrentState->OnExit();
 	}
 
 	m_pCurrentState = nullptr;

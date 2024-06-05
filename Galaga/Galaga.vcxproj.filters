@@ -125,9 +125,6 @@
     <ClInclude Include="FiniteStateMachine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Blackboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -34,13 +34,13 @@ void CharactersManager::StartLevel1()
 	BezierCurve firstCurve{ { -32.0f, -32.0f }, { -32.0f, -32.0f }, { 290.0f, 200.0f }, { 290.0f, 200.0f } };
 	firstPath.AddCurve(firstCurve, 1);
 
-	enemiesData.push({ 4.0f, firstPath });
+	enemiesData.push({ 4.0f, firstPath, EnemyType::Boss });
 
 	BezierPath secondPath{};
 	BezierCurve secondCurve{ { 640.0f, -32.0f }, { 640.0f, -32.0f }, { 330.0f, 200.0f }, { 330.0f, 200.0f } };
 	secondPath.AddCurve(secondCurve, 1);
 
-	enemiesData.push({ 4.3f, secondPath });
+	enemiesData.push({ 4.3f, secondPath, EnemyType::Bee });
 
 	m_Level.StartLevel(enemiesData);
 
@@ -69,14 +69,6 @@ void CharactersManager::CreatePlayerCharacters(Fluffy::Scene& scene)
 	pPlayer1Component->GetOnDeath().AddListener(this);
 
 	m_PlayerCharacters.push_back(pPlayer1Component);
-
-	/*std::shared_ptr<Fluffy::GameObject> pPlayer2{ std::make_shared<Fluffy::GameObject>(SCREEN_SIZE.x / 2.0f, SCREEN_SIZE.y - 80.0f) };
-	pPlayer2->AddComponent<Fluffy::Sprite>("galaga_player2.png");
-
-	PlayerCharacter* pPlayer2Component{ pPlayer2->AddComponent<PlayerCharacter>(3, int(m_PlayerCharacters.size())) };
-	scene.Add(pPlayer2);
-
-	m_PlayerCharacters.push_back(pPlayer2Component);*/
 }
 
 EnemyCharacter* CharactersManager::SpawnEnemy(const EnemyEnteringData& data)
@@ -95,7 +87,7 @@ EnemyCharacter* CharactersManager::SpawnEnemy(const EnemyEnteringData& data)
 		break;
 
 	case EnemyType::Bee:
-		fileName = "galaga_wasp.png";
+		fileName = "galaga_bee.png";
 		break;
 	}
 
