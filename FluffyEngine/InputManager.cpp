@@ -23,13 +23,13 @@ namespace Fluffy
 				return false;
 			}
 
-			for (const auto& pDevice : m_InputDevices)
-			{
-				pDevice->Update();
-				pDevice->HandleInput();
-			}
-
 			//ImGui_ImplSDL2_ProcessEvent(&e);
+		}
+
+		for (const auto& pDevice : m_InputDevices)
+		{
+			pDevice->Update();
+			pDevice->HandleInput();
 		}
 
 		return true;
