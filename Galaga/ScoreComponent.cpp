@@ -1,9 +1,10 @@
 #include "ScoreComponent.h"
 #include "Text.h"
 #include "GameObject.h"
-#include "IEventParam.h"
+#include "EventParams.h"
 #include "CharactersManager.h"
 #include <sstream>
+#include "EnemyCharacter.h"
 
 ScoreComponent::ScoreComponent(Fluffy::GameObject* pOwner, int playerIndex, const std::string& fontPath, int fontSize)
 	: Fluffy::Component(pOwner)
@@ -11,12 +12,15 @@ ScoreComponent::ScoreComponent(Fluffy::GameObject* pOwner, int playerIndex, cons
 {
 	m_pText = pOwner->AddComponent<Fluffy::Text>(GetScoreString(), fontPath, fontSize);
 
-	CharactersManager::GetInstance().GetOnEnemyKilled().AddListener(this);
+	CharactersManager::GetInstance()->GetOnEnemyKilled().AddListener(this);
 }
 
 ScoreComponent::~ScoreComponent()
 {
-	CharactersManager::GetInstance().GetOnEnemyKilled().RemoveListener(this);
+	if (CharactersManager::GetInstance() != nullptr)
+	{
+		CharactersManager::GetInstance()->GetOnEnemyKilled().RemoveListener(this);
+	}
 }
 
 void ScoreComponent::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* pParam)
@@ -24,11 +28,15 @@ void ScoreComponent::OnNotify(const Fluffy::EventType& eventType, const Fluffy::
 	switch (eventType)
 	{
 	case Fluffy::EventType::OnEnemyKilled:
-		if (const Fluffy::OnCharacterDeathParam* pCharacterDeathParam{ static_cast<const Fluffy::OnCharacterDeathParam*>(pParam) })
+		if (const CharacterDeathParam* pCharacterDeathParam{ static_cast<const CharacterDeathParam*>(pParam) })
 		{
-			if (pCharacterDeathParam->killer == m_PlayerIndex)
+			if (pCharacterDeathParam->GetKillerIndex() == m_PlayerIndex)
 			{
-				++m_Score;
+				if (const EnemyCharacter * pEnemy{ static_cast<const EnemyCharacter*>(pCharacterDeathParam->GetCharacter()) })
+				{
+					m_Score += CalculateScore(pEnemy);
+				}
+
 				m_pText->SetText(GetScoreString());
 			}
 		}
@@ -39,6 +47,29 @@ void ScoreComponent::OnNotify(const Fluffy::EventType& eventType, const Fluffy::
 std::string ScoreComponent::GetScoreString() const
 {
 	std::stringstream ss{};
-	ss << "Player " << m_PlayerIndex << " Score: " << m_Score;
+	ss << "Player " << m_PlayerIndex + 1 << " Score: " << m_Score;
 	return ss.str();
+}
+
+int ScoreComponent::CalculateScore(const class EnemyCharacter* pEnemy)
+{
+	EnemyType type{ pEnemy->GetType() };
+	EnemyStates state{ pEnemy->GetState() };
+
+	int score{ 0 };
+
+	switch (type)
+	{
+	case EnemyType::Bee:
+			score = state == EnemyStates::Idle ? m_IdleBeeKillScore : m_MovingBeeKillScore;
+			break;
+	case EnemyType::Butterfly:
+			score = state == EnemyStates::Idle ? m_IdleButterflyKillScore : m_MovingButterflyKillScore;
+			break;
+	case EnemyType::Boss:
+			score = state == EnemyStates::Idle ? m_IdleBossKillScore : m_MovingBossKillScore;
+			break;
+	}
+
+	return score;
 }

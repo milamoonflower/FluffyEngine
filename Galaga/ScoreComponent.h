@@ -25,6 +25,14 @@ private:
 	int m_Score{ 0 };
 	class Fluffy::Text* m_pText;
 
+	int m_IdleBeeKillScore{ 50 };
+	int m_MovingBeeKillScore{ 100 };
+	int m_IdleButterflyKillScore{ 80 };
+	int m_MovingButterflyKillScore{ 160 };
+	int m_IdleBossKillScore{ 150 };
+	int m_MovingBossKillScore{ 400 };
+
 	std::string GetScoreString() const;
+	int CalculateScore(const class EnemyCharacter* pEnemy);
 };
 

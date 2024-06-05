@@ -22,5 +22,6 @@ public:
 
 private:
 	const int m_PlayerIndex;
+	int m_ShotsFired{ 0 };
 };
 

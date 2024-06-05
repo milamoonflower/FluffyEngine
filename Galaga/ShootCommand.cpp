@@ -13,6 +13,7 @@ ShootCommand::ShootCommand(int playerIndex)
 
 void ShootCommand::Execute()
 {
-	const glm::vec2 position{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex)->GetGameObject()->GetWorldPosition() };
+	const glm::vec2 position{ CharactersManager::GetInstance()->GetPlayer(m_PlayerIndex)->GetGameObject()->GetWorldPosition() };
 	BulletsManager::GetInstance().Shoot(m_PlayerIndex, position);
+	++m_ShotsFired;
 }

@@ -9,5 +9,5 @@ KillEnemyCommand::KillEnemyCommand(int playerIndex)
 
 void KillEnemyCommand::Execute()
 {
-	CharactersManager::GetInstance().KillEnemy(m_PlayerIndex);
+	CharactersManager::GetInstance()->KillEnemy(m_PlayerIndex);
 }

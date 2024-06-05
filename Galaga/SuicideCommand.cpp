@@ -10,7 +10,7 @@ SuicideCommand::SuicideCommand(int playerIndex)
 
 void SuicideCommand::Execute()
 {
-	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex) })
+	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance()->GetPlayer(m_PlayerIndex) })
 	{
 		pPlayer->Kill();
 	}
