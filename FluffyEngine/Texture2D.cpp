@@ -7,7 +7,7 @@ Texture2D::~Texture2D()
 	SDL_DestroyTexture(m_pTexture);
 }
 
-glm::ivec2 Texture2D::GetSize() const
+glm::vec2 Texture2D::GetSize() const
 {
 	SDL_Rect dst;
 	SDL_QueryTexture(GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
