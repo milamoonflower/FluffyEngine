@@ -15,20 +15,41 @@ namespace Fluffy
 		SetWorldPosition(x, y);
 	}
 
+	GameObject::GameObject(const glm::vec2& position)
+	{
+		SetWorldPosition(position);
+	}
+
 	const std::vector<Component*>& GameObject::GetAllComponents() const
 	{
 		return m_RawComponents;
 	}
 
-	void GameObject::Update(const float deltaTime)
+	void GameObject::Start() const
 	{
-		for (const auto& components : m_Components)
-		{
-			for (auto& component : components.second)
+		std::ranges::for_each(m_Components,
+			[](const auto& components)
 			{
-				component->Update(deltaTime);
-			}
-		}
+				std::ranges::for_each(components.second,
+				[](auto& component)
+				{
+					component->Start();
+				});
+			});
+	}
+
+	void GameObject::Update(const float deltaTime) const
+	{
+		std::ranges::for_each(m_Components,
+			[deltaTime](const auto& components)
+			{
+				std::ranges::for_each(components.second,
+				[deltaTime](auto& component)
+					{
+						if (component->IsEnabled())
+							component->Update(deltaTime);
+					});
+			});
 	}
 
 	glm::vec2 GameObject::GetWorldPosition() const

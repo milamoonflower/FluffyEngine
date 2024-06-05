@@ -30,21 +30,60 @@ namespace Fluffy
 				m_RawComponents.push_back(pRawComponent);
 			}
 
+			pRawComponent->Awake();
+
 			return reinterpret_cast<ComponentType*>(pRawComponent);
 		}
 
-		template<typename T>
-		T* GetComponentOfType()
+		template<typename ComponentType>
+		ComponentType* GetComponent()
 		{
-			const std::string name{ typeid(T).name() };
-			return reinterpret_cast<T*>(m_Components[name][0].get());
+			const std::string name{ typeid(ComponentType).name() };
+
+			const auto& components{ m_Components.find(name) };
+			if (components == m_Components.end() || components->second.empty())
+				return nullptr;
+
+			return reinterpret_cast<ComponentType*>(components->second.at(0).get());
 		}
 
-		template<typename T>
-		const std::vector<Component*>& GetComponentsOfType()
+		template<typename ComponentType>
+		const ComponentType* GetComponent() const
 		{
-			const std::string name{ typeid(T).name() };
-			std::vector<T*> components{};
+			const std::string name{ typeid(ComponentType).name() };
+
+			const auto& components{ m_Components.find(name) };
+			if (components == m_Components.end() || components->second.empty())
+				return nullptr;
+
+			return reinterpret_cast<const ComponentType*>(components->second.at(0).get());
+		}
+
+		template<typename ComponentType>
+		bool TryGetComponent(ComponentType*& pOutComponent)
+		{
+			pOutComponent = GetComponent<ComponentType>();
+			return pOutComponent != nullptr;
+		}
+
+		template<typename ComponentType>
+		bool TryGetComponent(const ComponentType*& pOutComponent) const
+		{
+			pOutComponent = GetComponent<ComponentType>();
+			return pOutComponent != nullptr;
+		}
+
+		template<typename ComponentType>
+		bool HasComponent() const
+		{
+			return GetComponent<ComponentType>() != nullptr;
+		}
+
+		template<typename ComponentType>
+		const std::vector<Component*>& GetComponents()
+		{
+			const std::string name{ typeid(ComponentType).name() };
+			std::vector<ComponentType*> components{};
 
 			for (const auto& component : m_Components[name])
 			{
@@ -56,10 +95,10 @@ namespace Fluffy
 
 		const std::vector<Component*>& GetAllComponents() const;
 
-		template<typename T>
+		template<typename ComponentType>
 		void RemoveAllComponentsOfType()
 		{
-			const std::string name{ typeid(T).name() };
+			const std::string name{ typeid(ComponentType).name() };
 
 			for (int i{ m_Components[name].size() }; i > 0; --i)
 			{
@@ -68,17 +107,22 @@ namespace Fluffy
 
 			m_Components.erase(name);
 		}
-		void Update(const float deltaTime);
+
+		void Start() const;
+		void Update(const float deltaTime) const;
+		inline class Scene* GetScene() const { return m_pScene; }
+		inline void SetCurrentScene(class Scene* pScene) { m_pScene = pScene; }
 
 		void SetParent(GameObject* pParent, const bool keepWorldPosition);
 
-		inline Transform GetTransform() const { return m_LocalTransform; }
+		inline Transform& GetTransform() { return m_LocalTransform; }
+		inline const Transform& GetTransform() const { return m_LocalTransform; }
 		glm::vec2 GetWorldPosition() const;
 		void SetWorldPosition(const float x, const float y);
 		void SetWorldPosition(const glm::vec2& position);
 		void SetLocalPosition(const float x, const float y);
 		void SetLocalPosition(const glm::vec2& position);
-		inline bool IsActive() const { return m_IsActive; }
+		inline bool IsActive() const { return m_IsActive && !m_IsDestroyed; }
 		inline void SetActive(bool isActive) { m_IsActive = isActive; }
 		inline void Destroy() { m_IsDestroyed = true; }
 		inline bool IsDestroyed() const { return m_IsDestroyed; }
@@ -86,6 +130,7 @@ namespace Fluffy
 
 		GameObject() = default;
 		GameObject(const float x, const float y);
+		GameObject(const glm::vec2& position);
 		~GameObject() = default;
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -98,6 +143,8 @@ namespace Fluffy
 		//bool m_LocalPositionIsDirty{ false };
 		bool m_IsActive{ true };
 		bool m_IsDestroyed{ false };
+
+		class Scene* m_pScene{ nullptr };
 
 		GameObject* m_pParent{ };
 		std::vector<GameObject*> m_Children{ };
