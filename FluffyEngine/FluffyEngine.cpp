@@ -89,6 +89,8 @@ namespace Fluffy
 		auto& sceneManager = SceneManager::GetInstance();
 		auto& input = InputManager::GetInstance();
 
+		FluffyTime::Init();
+
 		bool doContinue = true;
 
 		//const float millisecondsPerFrame{ 1.0f / 60.0f };	// 60 FPS

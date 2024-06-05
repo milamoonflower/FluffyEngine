@@ -16,6 +16,11 @@ namespace Fluffy
 		return m_CurrentTime;
 	}
 
+	void FluffyTime::Init()
+	{
+		m_PreviousTime = std::chrono::high_resolution_clock::now();
+	}
+
 	void FluffyTime::Update()
 	{
 		m_CurrentTime = std::chrono::high_resolution_clock::now();

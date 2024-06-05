@@ -9,6 +9,7 @@ namespace Fluffy
 	public:
 		static float DeltaTime();
 		static std::chrono::high_resolution_clock::time_point GetCurrent();
+		static void Init();
 		static void Update();
 
 	private:
