@@ -31,6 +31,7 @@
 #include "MoveCommand.h"
 #include "ShootCommand.h"
 #include "BulletsManager.h"
+#include "Structs.h"
 /*
 #include "SDLSoundSystem.h"
 #include "ServiceLocator.h"*/
@@ -43,70 +44,55 @@ static void CreateLevel1()
 
 	const auto font{ ResourceManager::GetInstance().LoadFont("Lingua.otf", 15) };
 
-	std::shared_ptr<GameObject> pMovementInfo{ std::make_shared<GameObject>(10.0f, 20.0f) };
-	pMovementInfo->AddComponent<Text>("Movement: Keyboard - WASD / Controller - DPAD", font);
-	scene.Add(pMovementInfo);
+	std::shared_ptr<GameObject> pBackground{ std::make_shared<GameObject>(SCREEN_SIZE / 2.0f) };
+	pBackground->AddComponent<Sprite>("bg.png");
+	scene.Add(pBackground);
 
-	std::shared_ptr<GameObject> pActionsInfo{ std::make_shared<GameObject>(10.0f, 40.0f) };
-	pActionsInfo->AddComponent<Text>("Kill Enemy: Keyboard - T / Controller - B    Kill Self: Keyboard - R / Controller - Y", font);
-	scene.Add(pActionsInfo);
+	std::shared_ptr<GameObject> pCharactersManager{ std::make_shared<GameObject>(0.0f, 0.0f) };
+	pCharactersManager->AddComponent<CharactersManager>();
+	scene.Add(pCharactersManager);
 
-	CharactersManager::GetInstance().CreatePlayerCharacters(scene);
+	CharactersManager::GetInstance()->CreatePlayerCharacters(scene);
 
 	// TODO: pass <EnemyType, glm::vec2 spawnPosition>
-	CharactersManager::GetInstance().SpawnEnemies(scene);
+	//CharactersManager::GetInstance()->SpawnEnemy(scene);
 	BulletsManager::GetInstance().SetScene(&scene);
 
-	std::shared_ptr<GameObject> pPlayer1ScoreDisplay{ std::make_shared<GameObject>(40.0f, 80.0f) };
-	pPlayer1ScoreDisplay->AddComponent<ScoreComponent>(1, "Lingua.otf", 15);
+	std::shared_ptr<GameObject> pPlayer1ScoreDisplay{ std::make_shared<GameObject>(20.0f, 20.0f) };
+	pPlayer1ScoreDisplay->AddComponent<ScoreComponent>(0, "emulogic.ttf", 15);
 	scene.Add(pPlayer1ScoreDisplay);
 
-	std::shared_ptr<GameObject> pPlayer1HealthDisplay{ std::make_shared<GameObject>(40.0f, 95.0f) };
-	pPlayer1HealthDisplay->AddComponent<HealthDisplayComponent>(1, "Lingua.otf", 15);
+	std::shared_ptr<GameObject> pPlayer1HealthDisplay{ std::make_shared<GameObject>(30.0f, SCREEN_SIZE.y - 30.0f) };
+	pPlayer1HealthDisplay->AddComponent<HealthDisplayComponent>(0);
 	scene.Add(pPlayer1HealthDisplay);
 
-	std::shared_ptr<GameObject> pPlayer2ScoreDisplay{ std::make_shared<GameObject>(40.0f, 110.0f) };
-	pPlayer2ScoreDisplay->AddComponent<ScoreComponent>(2, "Lingua.otf", 15);
+	/*std::shared_ptr<GameObject> pPlayer2ScoreDisplay{ std::make_shared<GameObject>(40.0f, 110.0f) };
+	pPlayer2ScoreDisplay->AddComponent<ScoreComponent>(1, "Lingua.otf", 15);
 	scene.Add(pPlayer2ScoreDisplay);
 
 	std::shared_ptr<GameObject> pPlayer2HealthDisplay{ std::make_shared<GameObject>(40.0f, 125.0f) };
-	pPlayer2HealthDisplay->AddComponent<HealthDisplayComponent>(2, "Lingua.otf", 15);
-	scene.Add(pPlayer2HealthDisplay);
+	pPlayer2HealthDisplay->AddComponent<HealthDisplayComponent>(1, "Lingua.otf", 15);
+	scene.Add(pPlayer2HealthDisplay);*/
 
 	std::unique_ptr<Keyboard> keyboard = std::make_unique<Keyboard>();
 
-	KeyboardInput k_up{ SDL_SCANCODE_W, InputState::Previous };
-	KeyboardInput k_left{ SDL_SCANCODE_A, InputState::Previous };
-	KeyboardInput k_down{ SDL_SCANCODE_S, InputState::Previous };
-	KeyboardInput k_right{ SDL_SCANCODE_D, InputState::Previous };
-	KeyboardInput k_R{ SDL_SCANCODE_R, InputState::Released };
-	KeyboardInput k_T{ SDL_SCANCODE_T, InputState::Released };
-	KeyboardInput k_Space{ SDL_SCANCODE_SPACE, InputState::Released };
+	KeyboardInput k_left{ SDL_SCANCODE_A, InputState::Held };
+	KeyboardInput k_right{ SDL_SCANCODE_D, InputState::Held };
+	KeyboardInput k_Space{ SDL_SCANCODE_SPACE, InputState::Held };
 
-	keyboard->AddCommand(k_up, std::make_unique<MoveCommand>(1, glm::vec2(0.0f, -1.0f), 120.0f));
-	keyboard->AddCommand(k_left, std::make_unique<MoveCommand>(1, glm::vec2(-1.0f, 0.0f), 120.0f));
-	keyboard->AddCommand(k_down, std::make_unique<MoveCommand>(1, glm::vec2(0.0f, 1.0f), 120.0f));
-	keyboard->AddCommand(k_right, std::make_unique<MoveCommand>(1, glm::vec2(1.0f, 0.0f), 120.0f));
-	keyboard->AddCommand(k_R, std::make_unique<SuicideCommand>(1));
-	//keyboard->AddCommand(k_T, std::make_unique<KillEnemyCommand>(1));
-	keyboard->AddCommand(k_Space, std::make_unique<ShootCommand>(1));
+	keyboard->AddCommand(k_left, std::make_unique<MoveCommand>(0, glm::vec2(-1.0f, 0.0f), 200.0f));
+	keyboard->AddCommand(k_right, std::make_unique<MoveCommand>(0, glm::vec2(1.0f, 0.0f), 200.0f));
+	keyboard->AddCommand(k_Space, std::make_unique<ShootCommand>(0));
 
 	std::unique_ptr<Controller> controller = std::make_unique<Controller>();
 
-	ControllerInput up{ Button::XINPUT_GAMEPAD_DRAD_UP, InputState::Previous };
-	ControllerInput left{ Button::XINPUT_GAMEPAD_DRAD_LEFT, InputState::Previous };
-	ControllerInput down{ Button::XINPUT_GAMEPAD_DRAD_DOWN, InputState::Previous };
-	ControllerInput right{ Button::XINPUT_GAMEPAD_DRAD_RIGHT, InputState::Previous };
-	ControllerInput Y{ Button::XINPUT_CONTROLLER_Y, InputState::Released };
-	ControllerInput B{ Button::XINPUT_CONTROLLER_B, InputState::Released };
+	ControllerInput left{ Button::XINPUT_GAMEPAD_DRAD_LEFT, InputState::Held };
+	ControllerInput right{ Button::XINPUT_GAMEPAD_DRAD_RIGHT, InputState::Held };
+	ControllerInput B{ Button::XINPUT_CONTROLLER_B, InputState::Held };
 
-	controller->AddCommand(up, std::make_unique<MoveCommand>(2, glm::vec2(0.0f, -1.0f), 100.0f));
-	controller->AddCommand(left, std::make_unique<MoveCommand>(2, glm::vec2(-1.0f, 0.0f), 100.0f));
-	controller->AddCommand(down, std::make_unique<MoveCommand>(2, glm::vec2(0.0f, 1.0f), 100.0f));
-	controller->AddCommand(right, std::make_unique<MoveCommand>(2, glm::vec2(1.0f, 0.0f), 100.0f));
-	controller->AddCommand(Y, std::make_unique<SuicideCommand>(2));
-	//controller->AddCommand(B, std::make_unique<KillEnemyCommand>(2));
-	controller->AddCommand(B, std::make_unique<ShootCommand>(2));
+	controller->AddCommand(left, std::make_unique<MoveCommand>(1, glm::vec2(-1.0f, 0.0f), 200.0f));
+	controller->AddCommand(right, std::make_unique<MoveCommand>(1, glm::vec2(1.0f, 0.0f), 200.0f));
+	controller->AddCommand(B, std::make_unique<ShootCommand>(1));
 
 	auto& input = InputManager::GetInstance();
 	input.AddDevice(std::move(keyboard));
@@ -116,6 +102,9 @@ static void CreateLevel1()
 
 	ServiceLocator::GetSoundSystem()->AddSFX("../Data/sound.wav", 1);
 	ServiceLocator::GetSoundSystem()->Play(1, 30);*/
+
+
+	CharactersManager::GetInstance()->StartLevel1();
 }
 
 void load()
