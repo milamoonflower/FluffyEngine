@@ -1,5 +1,7 @@
 #pragma once
 #include "Character.h"
+#include "CollisionLayers.h"
+#include <glm\glm.hpp>
 
 namespace Fluffy
 {
@@ -17,10 +19,15 @@ public:
 	PlayerCharacter& operator=(const PlayerCharacter&) = delete;
 	PlayerCharacter& operator=(PlayerCharacter&&) = delete;
 
-	std::string GetTypeName() override { return typeid(*this).name(); }
-	inline const int GetPlayerIndex() const { return m_PlayerIndex; }
+	int GetPlayerIndex() const override { return m_PlayerIndex; }
+	void Kill(int killerIndex = INVALID_PLAYER_INDEX) override;
+	void Respawn();
+
+protected:
+	const std::string& GetCollisionLayer() const override { return CollisionLayers::PLAYER; }
+	void OnCollisionEnter(Fluffy::GameObject* pOtherGameObject) override;
 
 private:
 	const int m_PlayerIndex;
+	const glm::vec2 m_RespawnPosition;
 };
-

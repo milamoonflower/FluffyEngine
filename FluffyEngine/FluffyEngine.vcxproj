@@ -200,12 +200,15 @@
   <ItemGroup>
     <ClInclude Include="BaseInputDevice.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="CollidersHandler.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="RectColliderComponent.h" />
+    <ClInclude Include="Rectf.h" />
     <ClInclude Include="IEventParam.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="IEventListener.h" />
@@ -221,6 +224,7 @@
     <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteColliderComponent.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="FluffyTime.h" />
     <ClInclude Include="Transform.h" />
@@ -237,6 +241,7 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="FluffyEngine.cpp" />
+    <ClCompile Include="RectColliderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -244,6 +249,7 @@
     <ClCompile Include="SDLSoundSystem.cpp" />
     <ClCompile Include="ServiceLocator.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteColliderComponent.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="FluffyTime.cpp" />

@@ -8,7 +8,9 @@ namespace Fluffy
 		OnDamageTaken,
 		OnCharacterDeath,
 		OnEnemyKilled,
-		OnCollision,
+		OnCollisionEnter,
+		OnCollisionExit,
+		OnBulletHit,
 	};
 
 	class Event
