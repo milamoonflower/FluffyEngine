@@ -198,6 +198,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="BaseInputDevice.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CollidersHandler.h" />
@@ -231,6 +232,7 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="BaseInputDevice.cpp" />
     <ClCompile Include="CollidersHandler.cpp" />
     <ClCompile Include="Command.cpp" />

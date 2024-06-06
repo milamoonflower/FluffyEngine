@@ -29,10 +29,6 @@ void CharactersManager::StartLevel1()
 	Parser::GetInstance().ParseEnemyLayoutData("D:/Repos/FluffyEngine/Data/Formations/galaga_level_1.csv", data);
 	data;
 
-	std::string beeFormationsData{ "Formations/Formation1Bees.txt" };
-	std::string butterflyFormationsData{ "Formations/Formation1Butterflies.txt" };
-	std::string bossFormationsData{ "Formations/Formation1Boss.txt" };
-
 	std::queue<EnemyEnteringData> enemiesData{};
 
 	BezierPath firstPath{};
@@ -84,7 +80,7 @@ EnemyCharacter* CharactersManager::SpawnEnemy(const EnemyEnteringData& data)
 	switch (data.type)
 	{
 	case EnemyType::Boss:
-		fileName = "galaga_boss.png";
+		fileName = "galaga_boss_green.png";
 		break;
 		
 	case EnemyType::Butterfly:
@@ -96,7 +92,8 @@ EnemyCharacter* CharactersManager::SpawnEnemy(const EnemyEnteringData& data)
 		break;
 	}
 
-	pEnemy->AddComponent<Fluffy::Sprite>(fileName);
+	pEnemy->AddComponent<Fluffy::Sprite>(fileName, 2, 1, 2.0f);
+
 	const float enemySpeed{ 200.0f };
 	EnemyCharacter* pEnemyCharacter{ pEnemy->AddComponent<EnemyCharacter>(data.type, enemySpeed) };
 	m_pOwner->GetScene()->Add(pEnemy);

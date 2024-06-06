@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
+#include "Rectf.h"
 
 namespace Fluffy
 {
@@ -66,6 +67,25 @@ namespace Fluffy
 		dst.w = static_cast<int>(width);
 		dst.h = static_cast<int>(height);
 		SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	}
+
+	void Renderer::RenderTexture(const Texture2D& texture, const Rectf& source, const float x, const float y) const
+	{
+		const SDL_Rect src
+		{
+			static_cast<int>(source.left),
+			static_cast<int>(source.top),
+			static_cast<int>(source.width),
+			static_cast<int>(source.height),
+		};
+
+		SDL_Rect dst{};
+		dst.x = static_cast<int>(x);
+		dst.y = static_cast<int>(y);
+		dst.w = static_cast<int>(source.width);
+		dst.h = static_cast<int>(source.height);
+
+		SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst);
 	}
 
 	SDL_Renderer* Renderer::GetSDLRenderer() const { return m_pRenderer; }
