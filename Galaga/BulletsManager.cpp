@@ -36,6 +36,7 @@ void BulletsManager::Shoot(const int ownerIndex, const glm::vec2& position)
 
 	m_ShootTimer[ownerIndex] = SHOOT_INTERVAL;
 	++m_ActivePlayerBulletCounts[ownerIndex];
+	++m_ShotsFired[ownerIndex];
 }
 
 void BulletsManager::Initialize()

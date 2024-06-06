@@ -37,6 +37,7 @@ private:
 
 	float m_ShootTimer[2]{ 0.0f };
 	int m_ActivePlayerBulletCounts[2]{ 0 };
+	int m_ShotsFired[2]{ 0 };
 
 	void PoolBullet(Bullet* pBullet);
 };
