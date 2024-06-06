@@ -195,7 +195,7 @@
     <ClInclude Include="FiniteStateMachine.h" />
     <ClInclude Include="FPSCounter.h" />
     <ClInclude Include="HealthDisplayComponent.h" />
-    <ClInclude Include="JSONParser.h" />
+    <ClInclude Include="Parser.h" />
     <ClInclude Include="KillEnemyCommand.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="MoveCommand.h" />

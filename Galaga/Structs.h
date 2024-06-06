@@ -92,6 +92,7 @@ struct EnemyEnteringData
 {
 public:
 	float time{ 0.0f };
+	glm::vec2 position{};
 	BezierPath path{};
 	EnemyType type{};
 	int order{ 0 }; // order of entering the scene

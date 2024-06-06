@@ -11,6 +11,7 @@
 #include "EventParams.h"
 #include "BulletsManager.h"
 #include "Structs.h"
+#include "Parser.h"
 #include <memory>
 #include <algorithm>
 
@@ -24,6 +25,10 @@ CharactersManager::CharactersManager(Fluffy::GameObject* pOwner)
 
 void CharactersManager::StartLevel1()
 {
+	std::vector<EnemyEnteringData> data;
+	Parser::GetInstance().ParseEnemyLayoutData("D:/Repos/FluffyEngine/Data/Formations/galaga_level_1.csv", data);
+	data;
+
 	std::string beeFormationsData{ "Formations/Formation1Bees.txt" };
 	std::string butterflyFormationsData{ "Formations/Formation1Butterflies.txt" };
 	std::string bossFormationsData{ "Formations/Formation1Boss.txt" };
@@ -34,13 +39,13 @@ void CharactersManager::StartLevel1()
 	BezierCurve firstCurve{ { -32.0f, -32.0f }, { -32.0f, -32.0f }, { 290.0f, 200.0f }, { 290.0f, 200.0f } };
 	firstPath.AddCurve(firstCurve, 1);
 
-	enemiesData.push({ 4.0f, firstPath, EnemyType::Boss });
+	enemiesData.push({ 4.0f, {}, firstPath, EnemyType::Boss });
 
 	BezierPath secondPath{};
 	BezierCurve secondCurve{ { 640.0f, -32.0f }, { 640.0f, -32.0f }, { 330.0f, 200.0f }, { 330.0f, 200.0f } };
 	secondPath.AddCurve(secondCurve, 1);
 
-	enemiesData.push({ 4.3f, secondPath, EnemyType::Bee });
+	enemiesData.push({ 4.3f, {}, secondPath, EnemyType::Bee });
 
 	m_Level.StartLevel(enemiesData);
 
