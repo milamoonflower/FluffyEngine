@@ -34,24 +34,34 @@ SoundManager::~SoundManager()
 
 void SoundManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam*)
 {
-	const int volume{ 30 };
-
 	switch (eventType)
 	{
 	case Fluffy::EventType::OnLevelStart:
-		m_SoundSystem->Play({ SOUND_ID(GameStart), volume });
+		m_SoundSystem->Play({ SOUND_ID(GameStart), GetSoundVolume() });
 		break;
 
 	case Fluffy::EventType::OnPlayerShoot:
-		m_SoundSystem->Play({ SOUND_ID(PlayerShoot), volume });
+		m_SoundSystem->Play({ SOUND_ID(PlayerShoot), GetSoundVolume() });
 		break;
 
 	case Fluffy::EventType::OnBulletHit:
-		m_SoundSystem->Play({ SOUND_ID(BulletHit), volume });
+		m_SoundSystem->Play({ SOUND_ID(BulletHit), GetSoundVolume() });
 		break;
 
 	case Fluffy::EventType::OnPlayerKilled:
-		m_SoundSystem->Play({ SOUND_ID(PlayerKilled), volume });
+		m_SoundSystem->Play({ SOUND_ID(PlayerKilled), GetSoundVolume() });
 		break;
 	}
+}
+
+void SoundManager::ToggleMute()
+{
+	m_IsMuted = !m_IsMuted;
+	m_SoundSystem->SetVolume(GetSoundVolume());
+}
+
+int SoundManager::GetSoundVolume() const
+{
+	const int defaultVolume{ 30 };
+	return m_IsMuted ? 0 : defaultVolume;
 }

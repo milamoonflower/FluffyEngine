@@ -24,6 +24,7 @@ namespace Fluffy
 		virtual void AddSFX(const std::string& filePath, const SoundID ID) = 0;
 		virtual void Update() = 0;
 		virtual void Play(const Sound&) = 0;
+		virtual void SetVolume(const int volume) = 0;
 		virtual void Pause() = 0;
 		virtual void Resume() = 0;
 		virtual void Stop() = 0;

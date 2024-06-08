@@ -180,6 +180,7 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MoveCommand.cpp" />
+    <ClCompile Include="ToggleSoundCommand.cpp" />
     <ClCompile Include="PlayerCharacter.cpp" />
     <ClCompile Include="Rotator.cpp" />
     <ClCompile Include="ScoreComponent.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameOverScreen.h" />
     <ClInclude Include="HealthDisplayComponent.h" />
+    <ClInclude Include="ToggleSoundCommand.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="MoveCommand.h" />

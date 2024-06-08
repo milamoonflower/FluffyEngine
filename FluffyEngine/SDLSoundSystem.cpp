@@ -54,6 +54,11 @@ namespace Fluffy
 		std::thread{ [this] { Update(); } }.detach();	// detach because we don't care to wait for or own this thread, we just want it to do its thing on its own
 	}
 
+	void SDLSoundSystem::SetVolume(const int volume)
+	{
+		Mix_Volume(-1, volume);
+	}
+
 	void SDLSoundSystem::Update()
 	{
 		bool hasValidSound{ false };
@@ -84,7 +89,7 @@ namespace Fluffy
 			return;
 		}
 
-		Mix_Volume(-1, sound.volume);	// all sounds will change the volume of the same channel -> should fix at some point (more channels?)
+		SetVolume(sound.volume);	// all sounds will change the volume of the same channel -> should fix at some point (more channels?)
 		int channel = Mix_PlayChannel(-1, pSound, 0);
 		if (channel == -1)
 		{

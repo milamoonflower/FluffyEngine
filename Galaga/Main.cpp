@@ -29,6 +29,7 @@
 #include "MoveCommand.h"
 #include "ShootCommand.h"
 #include "SkipLevelCommand.h"
+#include "ToggleSoundCommand.h"
 #include "BulletsManager.h"
 #include "CollidersHandler.h"
 #include "CollisionLayers.h"
@@ -67,11 +68,13 @@ static void CreateScene()
 	const KeyboardInput k_right{ SDL_SCANCODE_D, InputState::Held };
 	const KeyboardInput k_Space{ SDL_SCANCODE_SPACE, InputState::Held };
 	const KeyboardInput k_F1{ SDL_SCANCODE_F1, InputState::Released };
+	const KeyboardInput k_F2{ SDL_SCANCODE_F2, InputState::Released };
 
 	keyboard->AddCommand(k_left, std::make_unique<MoveCommand>(0, glm::vec2(-1.0f, 0.0f), 200.0f));
 	keyboard->AddCommand(k_right, std::make_unique<MoveCommand>(0, glm::vec2(1.0f, 0.0f), 200.0f));
 	keyboard->AddCommand(k_Space, std::make_unique<ShootCommand>(0));
 	keyboard->AddCommand(k_F1, std::make_unique<SkipLevelCommand>());
+	keyboard->AddCommand(k_F2, std::make_unique<ToggleSoundCommand>());
 
 	std::unique_ptr<Controller> controller = std::make_unique<Controller>();
 

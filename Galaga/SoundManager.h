@@ -18,11 +18,15 @@ public:
 	~SoundManager();
 
 	void OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* pParam = nullptr) override;
+	void ToggleMute();
 
 private:
 	SoundManager();
 
 	Fluffy::ISoundSystem* m_SoundSystem{};
+	bool m_IsMuted{ false };
+
+	int GetSoundVolume() const;
 
 	enum SoundIDs : Fluffy::SoundID
 	{

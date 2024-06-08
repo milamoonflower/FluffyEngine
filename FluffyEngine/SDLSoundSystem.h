@@ -19,6 +19,7 @@ namespace Fluffy
 		~SDLSoundSystem();
 		void AddSFX(const std::string& filePath, const SoundID ID) override;
 		void Play(const Sound& sound) override;
+		void SetVolume(const int volume) override;
 		void Update() override;
 		void Pause() override;
 		void Resume() override;
