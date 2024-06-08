@@ -1,11 +1,5 @@
 #pragma once
 #include "Command.h"
-#include "glm/glm.hpp"
-
-namespace Fluffy
-{
-	class Command;
-}
 
 class ShootCommand final : public Fluffy::Command
 {
@@ -23,4 +17,3 @@ public:
 private:
 	const int m_PlayerIndex;
 };
-

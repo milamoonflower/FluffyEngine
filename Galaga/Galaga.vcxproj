@@ -183,6 +183,7 @@
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ShootCommand.cpp" />
     <ClCompile Include="EnemyStates.cpp" />
+    <ClCompile Include="SkipLevelCommand.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
@@ -209,6 +210,7 @@
     <ClInclude Include="ScoreComponent.h" />
     <ClInclude Include="ShootCommand.h" />
     <ClInclude Include="EnemyStates.h" />
+    <ClInclude Include="SkipLevelCommand.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="UIManager.h" />

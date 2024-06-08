@@ -2,11 +2,6 @@
 #include "Command.h"
 #include "glm/glm.hpp"
 
-namespace Fluffy
-{
-	class Command;
-}
-
 class MoveCommand final : public Fluffy::Command
 {
 public:

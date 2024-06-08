@@ -23,6 +23,7 @@ public:
 	GameManager& operator=(GameManager&&) = delete;
 
 	void StartLevel(const int levelIndex);
+	void SkipToNextLevel();
 	void Update(const float deltaTime) override;
 	void OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* param) override;
 

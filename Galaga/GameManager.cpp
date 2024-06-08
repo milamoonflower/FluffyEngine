@@ -74,6 +74,19 @@ void GameManager::StartLevel(const int levelIndex)
 	BulletsManager::GetInstance().Initialize();
 }
 
+void GameManager::SkipToNextLevel()
+{
+	if (++m_CurrentLevelIndex <= LEVELS_COUNT)
+	{
+		GameEvents::OnLevelCompleted.Invoke();
+		StartLevel(m_CurrentLevelIndex);
+	}
+	else
+	{
+		TriggerGameOver();
+	}
+}
+
 void GameManager::Update(const float deltaTime)
 {
 	// if the level has started
@@ -107,15 +120,7 @@ void GameManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEv
 	case Fluffy::EventType::OnEnemyKilled:
 		if (CharactersManager::GetInstance().AreAllEnemiesDead())
 		{
-			if (++m_CurrentLevelIndex <= LEVELS_COUNT)
-			{
-				GameEvents::OnLevelCompleted.Invoke();
-				StartLevel(m_CurrentLevelIndex);
-			}
-			else
-			{
-				TriggerGameOver();
-			}
+			SkipToNextLevel();
 		}
 		break;
 

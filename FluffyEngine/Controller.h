@@ -11,17 +11,17 @@ namespace Fluffy
 {
 	enum class Button : unsigned int
 	{
-		NONE = 0x0000,
+		NONE = 0,
 
-		XINPUT_CONTROLLER_A = 0x1000,
-		XINPUT_CONTROLLER_B = 0x2000,
-		XINPUT_CONTROLLER_X = 0x4000,
-		XINPUT_CONTROLLER_Y = 0x8000,
+		GAMEPAD_A = XINPUT_GAMEPAD_A,
+		GAMEPAD_B = XINPUT_GAMEPAD_B,
+		GAMEPAD_X = XINPUT_GAMEPAD_X,
+		GAMEPAD_Y = XINPUT_GAMEPAD_Y,
 
-		XINPUT_GAMEPAD_DRAD_UP = 0x0001,
-		XINPUT_GAMEPAD_DRAD_DOWN = 0x0002,
-		XINPUT_GAMEPAD_DRAD_LEFT = 0x0004,
-		XINPUT_GAMEPAD_DRAD_RIGHT = 0x0008
+		GAMEPAD_DPAD_UP = XINPUT_GAMEPAD_DPAD_UP,
+		GAMEPAD_DPAD_DOWN = XINPUT_GAMEPAD_DPAD_DOWN,
+		GAMEPAD_DPAD_LEFT = XINPUT_GAMEPAD_DPAD_LEFT,
+		GAMEPAD_DPAD_RIGHT = XINPUT_GAMEPAD_DPAD_RIGHT,
 	};
 
 	struct ControllerInput
@@ -70,14 +70,14 @@ namespace Fluffy
 		void AddCommand(ControllerInput input, std::unique_ptr<class Command> command);
 
 	private:
-		int m_ControllerIndex;
+		int m_ControllerIndex{};
 
 		XINPUT_STATE m_InputState{};
 
-		unsigned int m_PressedButtons;
-		unsigned int m_ReleasedButtons;
-		unsigned int m_PreviousButtons;
+		unsigned int m_PressedButtons{};
+		unsigned int m_ReleasedButtons{};
+		unsigned int m_PreviousButtons{};
 
-		std::unordered_map<ControllerInput, std::unique_ptr<class Command>> m_ButtonBindings;
+		std::unordered_map<ControllerInput, std::unique_ptr<class Command>> m_ButtonBindings{};
 	};
 }

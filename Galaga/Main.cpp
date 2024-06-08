@@ -28,6 +28,7 @@
 #include "HealthDisplayComponent.h"
 #include "MoveCommand.h"
 #include "ShootCommand.h"
+#include "SkipLevelCommand.h"
 #include "BulletsManager.h"
 #include "CollidersHandler.h"
 #include "CollisionLayers.h"
@@ -64,20 +65,23 @@ static void CreateScene()
 	const KeyboardInput k_left{ SDL_SCANCODE_A, InputState::Held };
 	const KeyboardInput k_right{ SDL_SCANCODE_D, InputState::Held };
 	const KeyboardInput k_Space{ SDL_SCANCODE_SPACE, InputState::Held };
+	const KeyboardInput k_F1{ SDL_SCANCODE_F1, InputState::Released };
 
 	keyboard->AddCommand(k_left, std::make_unique<MoveCommand>(0, glm::vec2(-1.0f, 0.0f), 200.0f));
 	keyboard->AddCommand(k_right, std::make_unique<MoveCommand>(0, glm::vec2(1.0f, 0.0f), 200.0f));
 	keyboard->AddCommand(k_Space, std::make_unique<ShootCommand>(0));
+	keyboard->AddCommand(k_F1, std::make_unique<SkipLevelCommand>());
 
 	std::unique_ptr<Controller> controller = std::make_unique<Controller>();
 
-	const ControllerInput left{ Button::XINPUT_GAMEPAD_DRAD_LEFT, InputState::Held };
-	const ControllerInput right{ Button::XINPUT_GAMEPAD_DRAD_RIGHT, InputState::Held };
-	const ControllerInput B{ Button::XINPUT_CONTROLLER_B, InputState::Held };
+	const ControllerInput c_left{ Button::GAMEPAD_DPAD_LEFT, InputState::Held };
+	const ControllerInput c_right{ Button::GAMEPAD_DPAD_RIGHT, InputState::Held };
+	const ControllerInput c_B{ Button::GAMEPAD_B, InputState::Held };
 
-	controller->AddCommand(left, std::make_unique<MoveCommand>(1, glm::vec2(-1.0f, 0.0f), 200.0f));
-	controller->AddCommand(right, std::make_unique<MoveCommand>(1, glm::vec2(1.0f, 0.0f), 200.0f));
-	controller->AddCommand(B, std::make_unique<ShootCommand>(1));
+	// since we don't have multiplayer right now, we're using both keyboard and gamepad for the same player index
+	controller->AddCommand(c_left, std::make_unique<MoveCommand>(0, glm::vec2(-1.0f, 0.0f), 200.0f));
+	controller->AddCommand(c_right, std::make_unique<MoveCommand>(0, glm::vec2(1.0f, 0.0f), 200.0f));
+	controller->AddCommand(c_B, std::make_unique<ShootCommand>(0));
 
 	auto& input = InputManager::GetInstance();
 	input.AddDevice(std::move(keyboard));
