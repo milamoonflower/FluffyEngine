@@ -45,6 +45,8 @@ void GameManager::StartLevel1()
 	enemiesData.push({ 4.3f, {}, secondPath, EnemyType::Bee });
 
 	m_ActiveLevel.StartLevel(enemiesData);
+	const LevelStartParam param{ 1 };
+	GameEvents::OnLevelStart.Invoke(&param);
 
 	BulletsManager::GetInstance().Initialize();
 }

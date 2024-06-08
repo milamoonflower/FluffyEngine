@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "IEventListener.h"
+#include <memory>
 
 namespace Fluffy
 {
@@ -15,6 +16,7 @@ namespace Fluffy
 class ScoreComponent final: public Fluffy::Component, Fluffy::IEventListener
 {
 public:
+	ScoreComponent(Fluffy::GameObject* pOwner, int playerIndex, const std::shared_ptr<class Font>& pFont);
 	ScoreComponent(Fluffy::GameObject* pOwner, int playerIndex, const std::string& fontPath, int fontSize);
 	~ScoreComponent();
 

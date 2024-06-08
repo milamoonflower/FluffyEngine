@@ -5,7 +5,7 @@ namespace Fluffy
 {
 	enum class EventType
 	{
-		OnGameStart,
+		OnLevelStart,
 		OnLevelCompleted,
 		OnGameOver,
 		OnPlayerShoot,
@@ -16,6 +16,7 @@ namespace Fluffy
 		OnCollisionEnter,
 		OnCollisionExit,
 		OnBulletHit,
+		RemoveLevelStartText,
 	};
 
 	class Event

@@ -16,7 +16,7 @@ SoundManager::SoundManager()
 	m_SoundSystem->AddSFX("../Data/Audio/BulletHit.mp3", SOUND_ID(BulletHit));
 	m_SoundSystem->AddSFX("../Data/Audio/PlayerDies.mp3", SOUND_ID(PlayerKilled));
 
-	GameEvents::OnGameStart.AddListener(this);
+	GameEvents::OnLevelStart.AddListener(this);
 	GameEvents::OnPlayerShoot.AddListener(this);
 	GameEvents::OnBulletHit.AddListener(this);
 
@@ -25,7 +25,7 @@ SoundManager::SoundManager()
 
 SoundManager::~SoundManager()
 {
-	GameEvents::OnGameStart.RemoveListener(this);
+	GameEvents::OnLevelStart.RemoveListener(this);
 	GameEvents::OnPlayerShoot.RemoveListener(this);
 	GameEvents::OnBulletHit.RemoveListener(this);
 
@@ -38,7 +38,7 @@ void SoundManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IE
 
 	switch (eventType)
 	{
-	case Fluffy::EventType::OnGameStart:
+	case Fluffy::EventType::OnLevelStart:
 		m_SoundSystem->Play({ SOUND_ID(GameStart), volume });
 		break;
 

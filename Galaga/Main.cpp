@@ -35,6 +35,7 @@
 #include "SDLSoundSystem.h"
 #include "ServiceLocator.h"
 #include "SoundManager.h"
+#include "UIManager.h"
 
 using namespace Fluffy;
 
@@ -43,8 +44,6 @@ static void CreateScene()
 	CollidersHandler::GetInstance().RegisterCollisionLayers(CollisionLayers::LAYERS, CollisionLayers::LAYER_INTERACTIONS);
 
 	auto& scene = SceneManager::GetInstance().CreateScene("MainScene");
-
-	const auto font{ ResourceManager::GetInstance().LoadFont("emulogic.ttf", 15) };
 
 	std::shared_ptr<GameObject> pBackground{ std::make_shared<GameObject>(SCREEN_SIZE / 2.0f) };
 	pBackground->AddComponent<Sprite>("bg.png");
@@ -61,7 +60,7 @@ static void CreateScene()
 	BulletsManager::GetInstance().SetScene(&scene);
 
 	std::shared_ptr<GameObject> pPlayer1ScoreDisplay{ std::make_shared<GameObject>(20.0f, 20.0f) };
-	pPlayer1ScoreDisplay->AddComponent<ScoreComponent>(0, "emulogic.ttf", 15);
+	pPlayer1ScoreDisplay->AddComponent<ScoreComponent>(0, UIManager::GetInstance().GetDefaultFont());
 	scene.Add(pPlayer1ScoreDisplay);
 
 	std::shared_ptr<GameObject> pPlayer1HealthDisplay{ std::make_shared<GameObject>(30.0f, SCREEN_SIZE.y - 30.0f) };
@@ -69,12 +68,14 @@ static void CreateScene()
 	scene.Add(pPlayer1HealthDisplay);
 
 	/*std::shared_ptr<GameObject> pPlayer2ScoreDisplay{ std::make_shared<GameObject>(40.0f, 110.0f) };
-	pPlayer2ScoreDisplay->AddComponent<ScoreComponent>(1, "Lingua.otf", 15);
+	pPlayer2ScoreDisplay->AddComponent<ScoreComponent>(1, UIManager::GetInstance().GetDefaultFont());
 	scene.Add(pPlayer2ScoreDisplay);
 
 	std::shared_ptr<GameObject> pPlayer2HealthDisplay{ std::make_shared<GameObject>(40.0f, 125.0f) };
-	pPlayer2HealthDisplay->AddComponent<HealthDisplayComponent>(1, "Lingua.otf", 15);
+	pPlayer2HealthDisplay->AddComponent<HealthDisplayComponent>(1, UIManager::GetInstance().GetDefaultFont());
 	scene.Add(pPlayer2HealthDisplay);*/
+
+	UIManager::GetInstance().CreateUIPanels(&scene);
 
 	std::unique_ptr<Keyboard> keyboard = std::make_unique<Keyboard>();
 

@@ -4,7 +4,8 @@
 struct GameEvents
 {
 public:
-	static Fluffy::Event OnGameStart;
+	static Fluffy::Event OnLevelStart;
+	static Fluffy::Event RemoveLevelStartText;
 	static Fluffy::Event OnLevelCompleted;
 	static Fluffy::Event OnGameOver;
 	static Fluffy::Event OnPlayerShoot;

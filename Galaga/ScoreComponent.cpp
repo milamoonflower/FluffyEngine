@@ -3,8 +3,18 @@
 #include "GameObject.h"
 #include "EventParams.h"
 #include "CharactersManager.h"
-#include <sstream>
 #include "EnemyCharacter.h"
+#include "Font.h"
+#include <sstream>
+
+ScoreComponent::ScoreComponent(Fluffy::GameObject* pOwner, int playerIndex, const std::shared_ptr<Font>& pFont)
+	: Fluffy::Component(pOwner)
+	, m_PlayerIndex{ playerIndex }
+{
+	m_pText = pOwner->AddComponent<Fluffy::Text>(GetScoreString(), pFont);
+
+	CharactersManager::GetInstance().GetOnEnemyKilled().AddListener(this);
+}
 
 ScoreComponent::ScoreComponent(Fluffy::GameObject* pOwner, int playerIndex, const std::string& fontPath, int fontSize)
 	: Fluffy::Component(pOwner)

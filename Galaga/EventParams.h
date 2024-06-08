@@ -31,3 +31,17 @@ public:
 private:
 	class Bullet* m_pBullet;
 };
+
+struct LevelStartParam : public Fluffy::IEventParam
+{
+public:
+	LevelStartParam(const int levelIndex)
+		: m_LevelIndex{ levelIndex }
+	{
+	}
+
+	inline int GetLevelIndex() const { return m_LevelIndex; }
+
+private:
+	int m_LevelIndex;
+};

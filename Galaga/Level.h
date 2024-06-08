@@ -31,11 +31,14 @@ private:
 
 	const float m_MaxEnemyCount{ 20 };
 
+	const float m_RemoveLevelNameTime{ 2.0f };
+
 	std::vector<class EnemyCharacter*> m_Enemies{};	// each enemy type will have its own container
 	const float m_EnemyDiveInterval{ 4.0f };
 	float m_EnemyExitTimer{ 0.0f };	// each enemy type will have its own interval and timer
 
 	bool m_Playing{ false };
+	bool m_RemovedLevelName{ false };
 
 	void HandleEnemyDiving();
 

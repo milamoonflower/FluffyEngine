@@ -18,6 +18,8 @@ class CharactersManager final : public Fluffy::Singleton<CharactersManager>, pub
 	friend Fluffy::Singleton<CharactersManager>;
 
 public:
+	~CharactersManager();
+
 	void CreatePlayerCharacters(Fluffy::Scene* pScene);
 	class EnemyCharacter* SpawnEnemy(const EnemyEnteringData& data);
 	void RespawnPlayer(const int playerIndex);

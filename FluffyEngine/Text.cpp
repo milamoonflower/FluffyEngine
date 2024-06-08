@@ -10,20 +10,22 @@
 
 namespace Fluffy
 {
-	Text::Text(GameObject* pOwner, const std::string& text, std::shared_ptr<Font> font)
+	Text::Text(GameObject* pOwner, const std::string& text, const std::shared_ptr<Font>& pFont, const TextAlignment alignment /*= TextAlignment::Left*/)
 		: Component(pOwner)
 		, m_NeedsUpdate(true)
 		, m_Text(text)
-		, m_pFont(std::move(font))
+		, m_Alignment{ alignment }
+		, m_pFont(pFont)
 		, m_pTextTexture(nullptr)
 	{
 
 	}
 
-	Text::Text(GameObject* pOwner, const std::string& text, const std::string& path, int fontSize)
+	Text::Text(GameObject* pOwner, const std::string& text, const std::string& path, int fontSize, const TextAlignment alignment /*= TextAlignment::Left*/)
 		: Component(pOwner)
 		, m_NeedsUpdate(true)
 		, m_Text(text)
+		, m_Alignment{ alignment }
 		, m_pTextTexture(nullptr)
 	{
 		m_pFont = ResourceManager::GetInstance().LoadFont(path, fontSize);
@@ -50,6 +52,8 @@ namespace Fluffy
 
 		SDL_FreeSurface(surf);
 		m_pTextTexture = std::make_shared<Texture2D>(texture);
+		UpdateAlignmentOffset();
+
 		m_NeedsUpdate = false;
 	}
 
@@ -59,7 +63,7 @@ namespace Fluffy
 			return;
 
 		const auto& pos = m_pOwner->GetWorldPosition();
-		Renderer::GetInstance().RenderTexture(*m_pTextTexture, pos.x, pos.y);
+		Renderer::GetInstance().RenderTexture(*m_pTextTexture, pos.x - m_AlignmentOffset.x, pos.y - m_AlignmentOffset.y);
 	}
 
 	// This implementation uses the "dirty flag" pattern
@@ -70,6 +74,54 @@ namespace Fluffy
 		{
 			m_Text = text;
 			m_NeedsUpdate = true;
+		}
+	}
+
+	void Text::UpdateAlignmentOffset()
+	{
+		switch (m_Alignment)
+		{
+		case TextAlignment::BottomLeft:
+			m_AlignmentOffset = {};
+			break;
+
+		case TextAlignment::BottomCenter:
+			m_AlignmentOffset = m_pTextTexture->GetSize() / 2.0f;
+			m_AlignmentOffset.y = 0.0f;
+			break;
+
+		case TextAlignment::BottomRight:
+			m_AlignmentOffset = m_pTextTexture->GetSize();
+			m_AlignmentOffset.y = 0.0f;
+			break;
+
+		case TextAlignment::Left:
+			m_AlignmentOffset = m_pTextTexture->GetSize() / 2.0f;
+			m_AlignmentOffset.x = 0.0f;
+			break;
+
+		case TextAlignment::Center:
+			m_AlignmentOffset = m_pTextTexture->GetSize() / 2.0f;
+			break;
+
+		case TextAlignment::Right:
+			m_AlignmentOffset = m_pTextTexture->GetSize();
+			m_AlignmentOffset.y /= 2.0f;
+			break;
+
+		case TextAlignment::TopLeft:
+			m_AlignmentOffset = m_pTextTexture->GetSize();
+			m_AlignmentOffset.x = 0.0f;
+			break;
+
+		case TextAlignment::TopCenter:
+			m_AlignmentOffset = m_pTextTexture->GetSize();
+			m_AlignmentOffset.x /= 2.0f;
+			break;
+
+		case TextAlignment::TopRight:
+			m_AlignmentOffset = m_pTextTexture->GetSize();
+			break;
 		}
 	}
 }

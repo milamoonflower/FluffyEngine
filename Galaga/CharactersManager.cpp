@@ -21,6 +21,12 @@ CharactersManager::CharactersManager()
 	GameEvents::OnGameOver.AddListener(this);
 }
 
+CharactersManager::~CharactersManager()
+{
+	GameEvents::OnLevelCompleted.RemoveListener(this);
+	GameEvents::OnGameOver.RemoveListener(this);
+}
+
 void CharactersManager::CreatePlayerCharacters(Fluffy::Scene* pScene)
 {
 	std::shared_ptr<Fluffy::GameObject> pPlayer1{ std::make_shared<Fluffy::GameObject>(SCREEN_SIZE.x / 2.0f, SCREEN_SIZE.y - 80.0f) };
@@ -86,7 +92,8 @@ void CharactersManager::OnNotify(const Fluffy::EventType& eventType, const Fluff
 			}
 			else
 			{
-				const EnemyCharacter* pEnemy{ static_cast<EnemyCharacter*>(deathParam->GetCharacter()) };
+				EnemyCharacter* pEnemy{ static_cast<EnemyCharacter*>(deathParam->GetCharacter()) };
+				pEnemy->GetOnDeath().RemoveListener(this);
 
 				const auto& it{ std::ranges::find(m_Enemies, pEnemy) };
 				if (it != m_Enemies.end())

@@ -13,8 +13,7 @@ void Level::StartLevel(const std::queue<EnemyEnteringData>& data)
 
 	m_Time = 0.0f;
 	m_Playing = true;
-
-	GameEvents::OnGameStart.Invoke();
+	m_RemovedLevelName = false;
 }
 
 void Level::Update(const float deltaTime)
@@ -24,6 +23,12 @@ void Level::Update(const float deltaTime)
 
 	m_Time += deltaTime;
 	m_EnemyExitTimer += deltaTime;
+
+	if (!m_RemovedLevelName && m_Time >= m_RemoveLevelNameTime)
+	{
+		GameEvents::RemoveLevelStartText.Invoke();
+		m_RemovedLevelName = true;
+	}
 
 	if (!m_EnemyEnteringData.empty())
 	{
