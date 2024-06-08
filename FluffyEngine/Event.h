@@ -5,8 +5,11 @@ namespace Fluffy
 {
 	enum class EventType
 	{
+		OnGameStart,
+		OnPlayerShoot,
 		OnDamageTaken,
 		OnCharacterDeath,
+		OnPlayerKilled,
 		OnEnemyKilled,
 		OnCollisionEnter,
 		OnCollisionExit,
@@ -24,7 +27,7 @@ namespace Fluffy
 		Event& operator=(const Event&) = delete;
 		Event& operator=(Event&&) = delete;
 
-		void Invoke(const struct IEventParam* param);
+		void Invoke(const struct IEventParam* param = nullptr);
 
 		inline void AddListener(class IEventListener* pListener) { m_Listeners.push_back(pListener); }
 		void RemoveListener(class IEventListener* pListener);

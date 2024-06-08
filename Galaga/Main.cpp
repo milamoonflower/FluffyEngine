@@ -34,9 +34,9 @@
 #include "CollidersHandler.h"
 #include "CollisionLayers.h"
 #include "Structs.h"
-/*
 #include "SDLSoundSystem.h"
-#include "ServiceLocator.h"*/
+#include "ServiceLocator.h"
+#include "SoundManager.h"
 
 using namespace Fluffy;
 
@@ -102,10 +102,8 @@ static void CreateLevel1()
 	input.AddDevice(std::move(keyboard));
 	input.AddDevice(std::move(controller));
 
-	/*ServiceLocator::RegisterSoundSystem(std::make_unique<SDLSoundSystem>());
-
-	ServiceLocator::GetSoundSystem()->AddSFX("../Data/sound.wav", 1);
-	ServiceLocator::GetSoundSystem()->Play(1, 30);*/
+	ServiceLocator::RegisterSoundSystem(std::make_unique<SDLSoundSystem>());
+	SoundManager::GetInstance();	// Create the sound manager
 
 	CharactersManager::GetInstance()->StartLevel1();
 }

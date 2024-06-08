@@ -36,6 +36,7 @@ public:
 	void OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* param) override;
 
 	class PlayerCharacter* GetPlayer(const int playerIndex);
+	inline Fluffy::Event& GetOnPlayerKilled() { return m_OnPlayerKilled; }
 	inline Fluffy::Event& GetOnEnemyKilled() { return m_OnEnemyKilled; }
 
 protected:
@@ -43,6 +44,7 @@ protected:
 
 private:
 	Level m_Level{};
+	Fluffy::Event m_OnPlayerKilled{ Fluffy::EventType::OnPlayerKilled };
 	Fluffy::Event m_OnEnemyKilled{ Fluffy::EventType::OnEnemyKilled };
 
 	std::vector<class PlayerCharacter*> m_PlayerCharacters{};

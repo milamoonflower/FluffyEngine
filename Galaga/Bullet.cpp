@@ -5,6 +5,7 @@
 #include "CollisionLayers.h"
 #include "EventParams.h"
 #include "Character.h"
+#include "GameEvents.h"
 
 Bullet::Bullet(Fluffy::GameObject* pOwner, int ownerIndex, const glm::vec2& speed)
 	: Component(pOwner)
@@ -32,5 +33,5 @@ void Bullet::Initialize(int ownerIndex, const glm::vec2& position)
 void Bullet::OnTargetHit()
 {
 	const BulletHitParam param{ this };
-	m_OnTargetHit.Invoke(&param);
+	GameEvents::OnBulletHit.Invoke(&param);
 }

@@ -4,7 +4,11 @@
 #include "EventParams.h"
 #include "RectColliderComponent.h"
 #include "Structs.h"
+#include "Character.h"
 #include "CollisionLayers.h"
+#include "ServiceLocator.h"
+#include "SDLSoundSystem.h"
+#include "GameEvents.h"
 
 const float BulletsManager::PLAYER_BULLETS_SPEED{ 400.0f };
 const float BulletsManager::SHOOT_INTERVAL{ 0.2f };
@@ -26,7 +30,6 @@ void BulletsManager::Shoot(const int ownerIndex, const glm::vec2& position)
 	{
 		std::shared_ptr<Fluffy::GameObject> pBulletObject{ std::make_shared<Fluffy::GameObject>(position) };
 		pBullet = pBulletObject->AddComponent<Bullet>(ownerIndex, glm::vec2(0.0f, -PLAYER_BULLETS_SPEED));
-		pBullet->GetOnTargetHitEvent().AddListener(this);
 
 		m_Scene->Add(pBulletObject);
 	}
@@ -37,6 +40,9 @@ void BulletsManager::Shoot(const int ownerIndex, const glm::vec2& position)
 	m_ShootTimer[ownerIndex] = SHOOT_INTERVAL;
 	++m_ActivePlayerBulletCounts[ownerIndex];
 	++m_ShotsFired[ownerIndex];
+
+	if (ownerIndex != INVALID_PLAYER_INDEX)
+		GameEvents::OnPlayerShoot.Invoke();
 }
 
 void BulletsManager::Initialize()
@@ -49,6 +55,8 @@ void BulletsManager::Initialize()
 	m_PlayableAreaCollider->GetOnCollisionExit().AddListener(this);
 
 	m_Scene->Add(pPlayableAreaObject);
+
+	GameEvents::OnBulletHit.AddListener(this);
 }
 
 void BulletsManager::Update(const float deltaTime)

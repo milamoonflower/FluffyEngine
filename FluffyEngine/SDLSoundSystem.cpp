@@ -1,4 +1,5 @@
 #include "SDLSoundSystem.h"
+#include <SDL_mixer.h>
 #include <iostream>
 #include <algorithm>
 
@@ -21,18 +22,18 @@ namespace Fluffy
 
 	SDLSoundSystem::~SDLSoundSystem()
 	{
-		for (const auto& pSound : m_pSFX)
+		for (const auto& pSound : m_SoundEffects)
 		{
-			Mix_FreeChunk(pSound.second.get());
+			Mix_FreeChunk(pSound.second);
 		}
 
-		m_pSFX.clear();
+		m_SoundEffects.clear();
 
 		Mix_CloseAudio();
 		Mix_Quit();
 	}
 
-	void SDLSoundSystem::AddSFX(const std::string& filePath, const soundID ID)
+	void SDLSoundSystem::AddSFX(const std::string& filePath, const SoundID ID)
 	{
 		Mix_Chunk* soundEffect = Mix_LoadWAV(filePath.c_str());
 		if (soundEffect == nullptr)
@@ -42,26 +43,49 @@ namespace Fluffy
 		}
 
 		std::lock_guard<std::mutex> lock(m_SoundMutex);
-		m_pSFX.insert({ ID, std::shared_ptr<Mix_Chunk>(soundEffect) });
+		m_SoundEffects.insert({ ID, soundEffect });
+	}
+
+	void SDLSoundSystem::Play(const Sound& sound)
+	{
+		m_SoundQueue.push(sound);
+		m_SoundQueuedCondition.notify_one();
+
+		std::thread{ [this] { Update(); } }.detach();	// detach because we don't care to wait for or own this thread, we just want it to do its thing on its own
 	}
 
 	void SDLSoundSystem::Update()
 	{
+		bool hasValidSound{ false };
+		Sound sound{};
+		{
+			std::unique_lock lock{ m_SoundMutex };
+			m_SoundQueuedCondition.wait(lock, [this] { return !m_SoundQueue.empty(); });
 
-	}
+			// not sure if terminating the thread would make it end up here, so we're double-checking that the queue is not empty just to be safe
+			if (!m_SoundQueue.empty())
+			{
+				sound = m_SoundQueue.front();
+				m_SoundQueue.pop();
 
-	void SDLSoundSystem::Play(const soundID ID, const int volume)
-	{
-		const auto it{ m_pSFX.find(ID) /*std::find(m_pSFX.begin(), m_pSFX.end(), ID)*/ };
+				hasValidSound = true;
+			}
+		}
 
-		if (it == m_pSFX.end())
+		if (!hasValidSound)
+			return;
+
+		m_SoundQueuedCondition.notify_one();
+
+		Mix_Chunk* pSound{ nullptr };
+		if (!TryFindSoundEffect(sound.ID, pSound))
 		{
 			std::cerr << "Sound effect doesn't exist." << std::endl;
 			return;
 		}
 
-		Mix_Volume(-1, volume);
-		int channel = Mix_PlayChannel(-1, it->second.get(), 0);
+		Mix_Volume(-1, sound.volume);	// all sounds will change the volume of the same channel -> should fix at some point (more channels?)
+		int channel = Mix_PlayChannel(-1, pSound, 0);
 		if (channel == -1)
 		{
 			std::cerr << "Sound could not be played." << std::endl;
@@ -82,5 +106,19 @@ namespace Fluffy
 	void SDLSoundSystem::Stop()
 	{
 		Mix_HaltChannel(-1);
+	}
+
+	bool SDLSoundSystem::TryFindSoundEffect(SoundID soundID, Mix_Chunk*& outSound) const
+	{
+		const auto it{ m_SoundEffects.find(soundID) };
+
+		if (it != m_SoundEffects.end())
+		{
+			outSound = it->second;
+			return true;
+		}
+
+		outSound = nullptr;
+		return false;
 	}
 }

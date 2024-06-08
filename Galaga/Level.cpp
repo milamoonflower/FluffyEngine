@@ -4,6 +4,7 @@
 #include "CharactersManager.h"
 #include "Event.h"
 #include "EventParams.h"
+#include "GameEvents.h"
 #include <algorithm>
 
 void Level::StartLevel(const std::queue<EnemyEnteringData>& data)
@@ -12,6 +13,8 @@ void Level::StartLevel(const std::queue<EnemyEnteringData>& data)
 
 	m_Time = 0.0f;
 	m_Playing = true;
+
+	GameEvents::OnGameStart.Invoke();
 }
 
 void Level::Update(const float deltaTime)

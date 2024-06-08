@@ -3,7 +3,13 @@
 
 namespace Fluffy
 {
-	using soundID = unsigned short;
+	using SoundID = unsigned short;
+
+	struct Sound
+	{
+		SoundID ID;
+		int volume;
+	};
 
 	class ISoundSystem
 	{
@@ -15,9 +21,9 @@ namespace Fluffy
 		ISoundSystem& operator=(const ISoundSystem& other) = delete;
 		ISoundSystem& operator=(ISoundSystem&& other) = delete;
 
-		virtual void AddSFX(const std::string& filePath, const soundID ID) = 0;
+		virtual void AddSFX(const std::string& filePath, const SoundID ID) = 0;
 		virtual void Update() = 0;
-		virtual void Play(const soundID ID, const int volume) = 0;
+		virtual void Play(const Sound&) = 0;
 		virtual void Pause() = 0;
 		virtual void Resume() = 0;
 		virtual void Stop() = 0;

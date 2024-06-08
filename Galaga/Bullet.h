@@ -16,8 +16,6 @@ public:
 
 	void Update(const float deltaTime) override;
 	void Initialize(int ownerIndex, const glm::vec2& position);
-
-	inline Fluffy::Event& GetOnTargetHitEvent() { return m_OnTargetHit; }
 	void OnTargetHit();
 
 	inline int GetOwnerIndex() const { return m_OwnerIndex; }
@@ -25,6 +23,4 @@ public:
 private:
 	int m_OwnerIndex;
 	glm::vec2 m_Speed;
-
-	Fluffy::Event m_OnTargetHit{ Fluffy::EventType::OnBulletHit };
 };

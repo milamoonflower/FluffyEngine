@@ -123,9 +123,14 @@ void CharactersManager::OnNotify(const Fluffy::EventType& eventType, const Fluff
 			const int characterIndex{ deathParam->GetCharacter()->GetPlayerIndex() };
 
 			if (characterIndex != INVALID_PLAYER_INDEX)
+			{
+				m_OnPlayerKilled.Invoke(param);
 				StartPlayerRespawnTimer(characterIndex);
+			}
 			else
+			{
 				m_OnEnemyKilled.Invoke(param);
+			}
 		}
 		break;
 	}

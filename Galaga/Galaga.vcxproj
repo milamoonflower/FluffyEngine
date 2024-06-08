@@ -171,6 +171,7 @@
     <ClCompile Include="EnemyCharacter.cpp" />
     <ClCompile Include="FiniteStateMachine.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
+    <ClCompile Include="GameEvents.cpp" />
     <ClCompile Include="HealthDisplayComponent.cpp" />
     <ClCompile Include="KillEnemyCommand.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -181,6 +182,7 @@
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ShootCommand.cpp" />
     <ClCompile Include="EnemyStates.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="SuicideCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +196,7 @@
     <ClInclude Include="EventParams.h" />
     <ClInclude Include="FiniteStateMachine.h" />
     <ClInclude Include="FPSCounter.h" />
+    <ClInclude Include="GameEvents.h" />
     <ClInclude Include="HealthDisplayComponent.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="KillEnemyCommand.h" />
@@ -204,6 +207,7 @@
     <ClInclude Include="ScoreComponent.h" />
     <ClInclude Include="ShootCommand.h" />
     <ClInclude Include="EnemyStates.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="SuicideCommand.h" />
   </ItemGroup>
