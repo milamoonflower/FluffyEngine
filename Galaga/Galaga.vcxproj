@@ -173,6 +173,7 @@
     <ClCompile Include="FPSCounter.cpp" />
     <ClCompile Include="GameEvents.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="GameOverScreen.cpp" />
     <ClCompile Include="HealthDisplayComponent.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="FPSCounter.h" />
     <ClInclude Include="GameEvents.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GameOverScreen.h" />
     <ClInclude Include="HealthDisplayComponent.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Level.h" />

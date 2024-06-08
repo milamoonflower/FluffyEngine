@@ -2,7 +2,6 @@
 #include "Singleton.h"
 #include "Event.h"
 #include "IEventListener.h"
-#include "Text.h"
 #include "ResourceManager.h"
 #include <memory>
 
@@ -10,6 +9,7 @@ namespace Fluffy
 {
 	struct IEventParam;
 	class Scene;
+	class Text;
 }
 
 class UIManager final : public Fluffy::Singleton<UIManager>, public Fluffy::IEventListener
@@ -32,4 +32,5 @@ private:
 	UIManager();
 
 	Fluffy::Text* m_pLevelIntroText{};
+	class GameOverScreen* m_pGameOverScreen{};
 };

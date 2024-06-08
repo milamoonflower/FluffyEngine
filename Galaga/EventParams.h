@@ -45,3 +45,20 @@ public:
 private:
 	int m_LevelIndex;
 };
+
+struct GameOverParam : public Fluffy::IEventParam
+{
+public:
+	GameOverParam(const int shotsCount, const int hitsCount)
+		: m_ShotsCount{ shotsCount }
+		, m_HitsCount{ hitsCount }
+	{
+	}
+
+	inline int GetShotsCount() const { return m_ShotsCount; }
+	inline int GetHitsCount() const { return m_HitsCount; }
+
+private:
+	int m_ShotsCount;
+	int m_HitsCount;
+};

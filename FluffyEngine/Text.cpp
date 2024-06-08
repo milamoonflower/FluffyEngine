@@ -1,44 +1,75 @@
 #pragma once
-#include <stdexcept>
-#include <SDL_ttf.h>
 #include "Text.h"
 #include "Renderer.h"
 #include "Font.h"
 #include "Texture2D.h"
 #include "GameObject.h"
 #include "ResourceManager.h"
+#include <stdexcept>
+#include <SDL_ttf.h>
 
 namespace Fluffy
 {
-	Text::Text(GameObject* pOwner, const std::string& text, const std::shared_ptr<Font>& pFont, const TextAlignment alignment /*= TextAlignment::Left*/)
+	Text::Text(GameObject* pOwner, const std::string& text, const std::shared_ptr<Font>& pFont, const TextAlignment alignment /*= TextAlignment::Left*/, const SDL_Color color /*= { 255, 255, 255, 255 }*/)
 		: Component(pOwner)
-		, m_NeedsUpdate(true)
-		, m_Text(text)
+		, m_Text{ text }
 		, m_Alignment{ alignment }
-		, m_pFont(pFont)
-		, m_pTextTexture(nullptr)
+		, m_pFont{ pFont }
+		, m_Color{ color }
+		, m_pTextTexture{ nullptr }
 	{
-
+		RegenerateTexture();
 	}
 
-	Text::Text(GameObject* pOwner, const std::string& text, const std::string& path, int fontSize, const TextAlignment alignment /*= TextAlignment::Left*/)
+	Text::Text(GameObject* pOwner, const std::string& text, const std::string& path, int fontSize, const TextAlignment alignment /*= TextAlignment::Left*/, const SDL_Color color /*= { 255, 255, 255, 255 }*/)
 		: Component(pOwner)
-		, m_NeedsUpdate(true)
-		, m_Text(text)
+		, m_Text{ text }
 		, m_Alignment{ alignment }
-		, m_pTextTexture(nullptr)
+		, m_Color{ color }
+		, m_pTextTexture{ nullptr }
 	{
 		m_pFont = ResourceManager::GetInstance().LoadFont(path, fontSize);
+		RegenerateTexture();
 	}
 
-	void Text::Update(const float)
+	void Text::Render() const
 	{
-		if (!m_NeedsUpdate)
+		if (m_pTextTexture == nullptr)
 			return;
 
-		const SDL_Color color = { 255, 255, 255, 255 }; // only white text is supported now
+		const auto& pos = m_pOwner->GetWorldPosition();
+		Renderer::GetInstance().RenderTexture(*m_pTextTexture, pos.x - m_AlignmentOffset.x, pos.y - m_AlignmentOffset.y);
+	}
 
-		const auto surf = TTF_RenderUTF8_Blended(m_pFont->GetFont(), m_Text.c_str(), color);
+	void Text::SetText(const std::string& text)
+	{
+		if (m_Text != text)
+		{
+			m_Text = text;
+			RegenerateTexture();
+		}
+	}
+
+	void Text::SetColor(const SDL_Color& color)
+	{
+		if (m_Color.r != color.r ||
+			m_Color.g != color.g ||
+			m_Color.b != color.b ||
+			m_Color.a != color.a)
+		{
+			m_Color = color;
+			RegenerateTexture();
+		}
+	}
+
+	glm::vec2 Text::GetSize() const
+	{
+		return m_pTextTexture->GetSize();
+	}
+
+	void Text::RegenerateTexture()
+	{
+		const auto surf = TTF_RenderUTF8_Blended(m_pFont->GetFont(), m_Text.c_str(), m_Color);
 		if (surf == nullptr)
 		{
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
@@ -52,29 +83,8 @@ namespace Fluffy
 
 		SDL_FreeSurface(surf);
 		m_pTextTexture = std::make_shared<Texture2D>(texture);
+
 		UpdateAlignmentOffset();
-
-		m_NeedsUpdate = false;
-	}
-
-	void Text::Render() const
-	{
-		if (m_pTextTexture == nullptr)
-			return;
-
-		const auto& pos = m_pOwner->GetWorldPosition();
-		Renderer::GetInstance().RenderTexture(*m_pTextTexture, pos.x - m_AlignmentOffset.x, pos.y - m_AlignmentOffset.y);
-	}
-
-	// This implementation uses the "dirty flag" pattern
-	void Text::SetText(const std::string& text)
-	{
-		//Update only if the text has been changed
-		if (m_Text != text)
-		{
-			m_Text = text;
-			m_NeedsUpdate = true;
-		}
 	}
 
 	void Text::UpdateAlignmentOffset()

@@ -15,7 +15,7 @@ class GameManager final : public Fluffy::Component, public Fluffy::ComponentSing
 {
 public:
 	GameManager(Fluffy::GameObject* pOwner);
-	~GameManager() = default;
+	~GameManager();
 
 	GameManager(const GameManager&) = delete;
 	GameManager(GameManager&&) = delete;
@@ -33,6 +33,9 @@ private:
 	const static float PLAYER_RESPAWN_TIMER_DURATION;
 
 	float m_PlayerRespawnTimers[2]{ 0.0f };
+
+	int m_ShotsFiredCount{ 0 };
+	int m_ShotsHitCount{ 0 };
 
 	void StartPlayerRespawnTimer(const int playerIndex);
 	void UpdatePlayerRespawnTimers(const float deltaTime);

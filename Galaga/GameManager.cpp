@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "Parser.h"
 #include "BulletsManager.h"
+#include "Bullet.h"
 #include "CharactersManager.h"
 #include "EventParams.h"
 #include "Character.h"
@@ -18,6 +19,20 @@ GameManager::GameManager(Fluffy::GameObject* pOwner)
 
 	CharactersManager::GetInstance().GetOnPlayerKilled().AddListener(this);
 	CharactersManager::GetInstance().GetOnEnemyKilled().AddListener(this);
+
+	GameEvents::OnPlayerShoot.AddListener(this);
+	GameEvents::OnBulletHit.AddListener(this);
+}
+
+GameManager::~GameManager()
+{
+	RegisterInstance(nullptr);
+
+	CharactersManager::GetInstance().GetOnPlayerKilled().RemoveListener(this);
+	CharactersManager::GetInstance().GetOnEnemyKilled().RemoveListener(this);
+
+	GameEvents::OnPlayerShoot.RemoveListener(this);
+	GameEvents::OnBulletHit.RemoveListener(this);
 }
 
 void GameManager::CreatePlayerCharacters(Fluffy::Scene* scene)
@@ -43,6 +58,9 @@ void GameManager::StartLevel1()
 	secondPath.AddCurve(secondCurve, 1);
 
 	enemiesData.push({ 4.3f, {}, secondPath, EnemyType::Bee });
+
+	m_ShotsFiredCount = 0;
+	m_ShotsHitCount = 0;
 
 	m_ActiveLevel.StartLevel(enemiesData);
 	const LevelStartParam param{ 1 };
@@ -71,15 +89,35 @@ void GameManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEv
 			const int playerIndex{ deathParam->GetCharacter()->GetPlayerIndex() };
 
 			if (CharactersManager::GetInstance().GetPlayer(playerIndex)->GetLivesCount() > 0)
+			{
 				StartPlayerRespawnTimer(playerIndex);
+			}
 			else
-				GameEvents::OnGameOver.Invoke();
+			{
+				const GameOverParam gameOverParam{ m_ShotsFiredCount, m_ShotsHitCount };
+				GameEvents::OnGameOver.Invoke(&gameOverParam);
+			}
 		}
 		break;
 
 	case Fluffy::EventType::OnEnemyKilled:
 		if (CharactersManager::GetInstance().AreAllEnemiesDead())
-			GameEvents::OnLevelCompleted.Invoke();
+		{
+			const GameOverParam gameOverParam{ m_ShotsFiredCount, m_ShotsHitCount };
+			GameEvents::OnLevelCompleted.Invoke(&gameOverParam);
+		}
+		break;
+
+	case Fluffy::EventType::OnPlayerShoot:
+		++m_ShotsFiredCount;
+		break;
+
+	case Fluffy::EventType::OnBulletHit:
+		if (const BulletHitParam* bulletHitParam{ static_cast<const BulletHitParam*>(param) })
+		{
+			if (bulletHitParam->GetBullet()->GetOwnerIndex() != INVALID_PLAYER_INDEX)
+				++m_ShotsHitCount;
+		}
 		break;
 	}
 }
