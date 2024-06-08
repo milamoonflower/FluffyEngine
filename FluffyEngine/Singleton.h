@@ -43,6 +43,10 @@ namespace Fluffy
 		inline static T* m_pInstance{ nullptr };
 
 		ComponentSingleton() = default;
-		virtual void RegisterInstance() = 0;
+		void RegisterInstance(T* instance)
+		{
+			if (m_pInstance == nullptr)
+				m_pInstance = instance;
+		}
 	};
 }

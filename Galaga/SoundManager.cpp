@@ -20,7 +20,7 @@ SoundManager::SoundManager()
 	GameEvents::OnPlayerShoot.AddListener(this);
 	GameEvents::OnBulletHit.AddListener(this);
 
-	CharactersManager::GetInstance()->GetOnPlayerKilled().AddListener(this);
+	CharactersManager::GetInstance().GetOnPlayerKilled().AddListener(this);
 }
 
 SoundManager::~SoundManager()
@@ -29,7 +29,7 @@ SoundManager::~SoundManager()
 	GameEvents::OnPlayerShoot.RemoveListener(this);
 	GameEvents::OnBulletHit.RemoveListener(this);
 
-	CharactersManager::GetInstance()->GetOnPlayerKilled().RemoveListener(this);
+	CharactersManager::GetInstance().GetOnPlayerKilled().RemoveListener(this);
 }
 
 void SoundManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam*)

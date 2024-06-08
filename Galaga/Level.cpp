@@ -31,7 +31,7 @@ void Level::Update(const float deltaTime)
 
 		if (m_Time >= data.time)
 		{
-			EnemyCharacter* pEnemy{ CharactersManager::GetInstance()->SpawnEnemy(data) };
+			EnemyCharacter* pEnemy{ CharactersManager::GetInstance().SpawnEnemy(data) };
 
 			pEnemy->SetEnteringPath(data.path);
 			pEnemy->SetState(EnemyStates::Entering);

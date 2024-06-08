@@ -12,15 +12,12 @@ ScoreComponent::ScoreComponent(Fluffy::GameObject* pOwner, int playerIndex, cons
 {
 	m_pText = pOwner->AddComponent<Fluffy::Text>(GetScoreString(), fontPath, fontSize);
 
-	CharactersManager::GetInstance()->GetOnEnemyKilled().AddListener(this);
+	CharactersManager::GetInstance().GetOnEnemyKilled().AddListener(this);
 }
 
 ScoreComponent::~ScoreComponent()
 {
-	if (CharactersManager::GetInstance() != nullptr)
-	{
-		CharactersManager::GetInstance()->GetOnEnemyKilled().RemoveListener(this);
-	}
+	CharactersManager::GetInstance().GetOnEnemyKilled().RemoveListener(this);
 }
 
 void ScoreComponent::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* pParam)

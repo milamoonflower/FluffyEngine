@@ -27,10 +27,14 @@ void PlayerCharacter::Respawn()
 
 void PlayerCharacter::OnCollisionEnter(Fluffy::GameObject* pOtherGameObject)
 {
-	const Bullet* bullet{};
-	if (pOtherGameObject->HasComponent<EnemyCharacter>() ||
-	   (pOtherGameObject->TryGetComponent<Bullet>(bullet) && bullet->GetOwnerIndex() == INVALID_PLAYER_INDEX))
+	EnemyCharacter* pEnemy{};
+	const Bullet* pBullet{};
+	if (pOtherGameObject->TryGetComponent<EnemyCharacter>(pEnemy) ||
+	   (pOtherGameObject->TryGetComponent<Bullet>(pBullet) && pBullet->GetOwnerIndex() == INVALID_PLAYER_INDEX))
 	{
 		Kill();
+
+		if (pEnemy != nullptr)
+			pEnemy->Kill();
 	}
 }

@@ -12,7 +12,7 @@ HealthDisplayComponent::HealthDisplayComponent(Fluffy::GameObject* pOwner, int p
 	: Fluffy::Component(pOwner)
 	, m_PlayerIndex{ playerIndex }
 {
-	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance()->GetPlayer(playerIndex) })
+	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance().GetPlayer(playerIndex) })
 	{
 		pPlayer->GetOnDeath().AddListener(this);
 
@@ -32,10 +32,7 @@ HealthDisplayComponent::HealthDisplayComponent(Fluffy::GameObject* pOwner, int p
 
 HealthDisplayComponent::~HealthDisplayComponent()
 {
-	if (CharactersManager::GetInstance() == nullptr)
-		return;
-
-	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance()->GetPlayer(m_PlayerIndex) })
+	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex) })
 	{
 		pPlayer->GetOnDeath().RemoveListener(this);
 	}
@@ -48,7 +45,7 @@ void HealthDisplayComponent::OnNotify(const Fluffy::EventType& eventType, const 
 	switch (eventType)
 	{
 	case Fluffy::EventType::OnCharacterDeath:
-		if (PlayerCharacter * pPlayer{ CharactersManager::GetInstance()->GetPlayer(m_PlayerIndex) })
+		if (PlayerCharacter * pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex) })
 		{
 			lives = pPlayer->GetLivesCount();
 		}
@@ -67,7 +64,7 @@ std::string HealthDisplayComponent::GetLivesString() const
 
 	int lives{ 0 };
 
-	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance()->GetPlayer(m_PlayerIndex) })
+	if (PlayerCharacter* pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex) })
 	{
 		lives = pPlayer->GetLivesCount();
 	}

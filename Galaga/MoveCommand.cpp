@@ -17,7 +17,7 @@ MoveCommand::MoveCommand(int playerIndex, glm::vec2 direction, float speed)
 
 void MoveCommand::Execute()
 {
-	if (const PlayerCharacter* pPlayer{ CharactersManager::GetInstance()->GetPlayer(m_PlayerIndex) })
+	if (const PlayerCharacter* pPlayer{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex) })
 	{
 		if (Fluffy::GameObject* pPlayerGameObject{ pPlayer->GetGameObject() })
 		{

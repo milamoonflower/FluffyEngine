@@ -22,7 +22,7 @@
 #include "InputManager.h"
 #include "Controller.h"
 #include "Keyboard.h"
-#include "CharactersManager.h"
+#include "GameManager.h"
 #include "ScoreComponent.h"
 #include "PlayerCharacter.h"
 #include "HealthDisplayComponent.h"
@@ -40,11 +40,11 @@
 
 using namespace Fluffy;
 
-static void CreateLevel1()
+static void CreateScene()
 {
 	CollidersHandler::GetInstance().RegisterCollisionLayers(CollisionLayers::LAYERS, CollisionLayers::LAYER_INTERACTIONS);
 
-	auto& scene = SceneManager::GetInstance().CreateScene("Level1");
+	auto& scene = SceneManager::GetInstance().CreateScene("MainScene");
 
 	const auto font{ ResourceManager::GetInstance().LoadFont("emulogic.ttf", 15) };
 
@@ -52,14 +52,14 @@ static void CreateLevel1()
 	pBackground->AddComponent<Sprite>("bg.png");
 	scene.Add(pBackground);
 
-	std::shared_ptr<GameObject> pCharactersManager{ std::make_shared<GameObject>(0.0f, 0.0f) };
-	pCharactersManager->AddComponent<CharactersManager>();
-	scene.Add(pCharactersManager);
+	std::shared_ptr<GameObject> pGameManager{ std::make_shared<GameObject>(0.0f, 0.0f) };
+	pGameManager->AddComponent<GameManager>();
+	scene.Add(pGameManager);
 
-	CharactersManager::GetInstance()->CreatePlayerCharacters(scene);
+	GameManager::GetInstance()->CreatePlayerCharacters(&scene);
 
 	// TODO: pass <EnemyType, glm::vec2 spawnPosition>
-	//CharactersManager::GetInstance()->SpawnEnemy(scene);
+	//CharactersManager::GetInstance().SpawnEnemy(scene);
 	BulletsManager::GetInstance().SetScene(&scene);
 
 	std::shared_ptr<GameObject> pPlayer1ScoreDisplay{ std::make_shared<GameObject>(20.0f, 20.0f) };
@@ -80,9 +80,9 @@ static void CreateLevel1()
 
 	std::unique_ptr<Keyboard> keyboard = std::make_unique<Keyboard>();
 
-	KeyboardInput k_left{ SDL_SCANCODE_A, InputState::Held };
-	KeyboardInput k_right{ SDL_SCANCODE_D, InputState::Held };
-	KeyboardInput k_Space{ SDL_SCANCODE_SPACE, InputState::Held };
+	const KeyboardInput k_left{ SDL_SCANCODE_A, InputState::Held };
+	const KeyboardInput k_right{ SDL_SCANCODE_D, InputState::Held };
+	const KeyboardInput k_Space{ SDL_SCANCODE_SPACE, InputState::Held };
 
 	keyboard->AddCommand(k_left, std::make_unique<MoveCommand>(0, glm::vec2(-1.0f, 0.0f), 200.0f));
 	keyboard->AddCommand(k_right, std::make_unique<MoveCommand>(0, glm::vec2(1.0f, 0.0f), 200.0f));
@@ -90,9 +90,9 @@ static void CreateLevel1()
 
 	std::unique_ptr<Controller> controller = std::make_unique<Controller>();
 
-	ControllerInput left{ Button::XINPUT_GAMEPAD_DRAD_LEFT, InputState::Held };
-	ControllerInput right{ Button::XINPUT_GAMEPAD_DRAD_RIGHT, InputState::Held };
-	ControllerInput B{ Button::XINPUT_CONTROLLER_B, InputState::Held };
+	const ControllerInput left{ Button::XINPUT_GAMEPAD_DRAD_LEFT, InputState::Held };
+	const ControllerInput right{ Button::XINPUT_GAMEPAD_DRAD_RIGHT, InputState::Held };
+	const ControllerInput B{ Button::XINPUT_CONTROLLER_B, InputState::Held };
 
 	controller->AddCommand(left, std::make_unique<MoveCommand>(1, glm::vec2(-1.0f, 0.0f), 200.0f));
 	controller->AddCommand(right, std::make_unique<MoveCommand>(1, glm::vec2(1.0f, 0.0f), 200.0f));
@@ -105,12 +105,12 @@ static void CreateLevel1()
 	ServiceLocator::RegisterSoundSystem(std::make_unique<SDLSoundSystem>());
 	SoundManager::GetInstance();	// Create the sound manager
 
-	CharactersManager::GetInstance()->StartLevel1();
+	GameManager::GetInstance()->StartLevel1();
 }
 
 void load()
 {
-	CreateLevel1();
+	CreateScene();
 }
 
 int main(int, char* [])
