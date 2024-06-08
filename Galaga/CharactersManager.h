@@ -18,7 +18,6 @@ class CharactersManager final : public Fluffy::Singleton<CharactersManager>, pub
 public:
 	void CreatePlayerCharacters(Fluffy::Scene* pScene);
 	class EnemyCharacter* SpawnEnemy(const EnemyEnteringData& data);
-	void KillEnemy(const int killerIndex);
 	void RespawnPlayer(const int playerIndex);
 	void OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* param) override;
 

@@ -59,16 +59,6 @@ EnemyCharacter* CharactersManager::SpawnEnemy(const EnemyEnteringData& data)
 	return pEnemyCharacter;
 }
 
-void CharactersManager::KillEnemy(const int killerIndex)
-{
-	if (!m_Enemies.empty())
-	{
-		m_Enemies.back()->Kill(killerIndex);
-		m_Enemies.back()->GetGameObject()->Destroy();
-		m_Enemies.pop_back();
-	}
-}
-
 void CharactersManager::RespawnPlayer(const int playerIndex)
 {
 	m_PlayerCharacters[playerIndex]->Respawn();

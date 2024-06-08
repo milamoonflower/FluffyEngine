@@ -26,8 +26,6 @@
 #include "ScoreComponent.h"
 #include "PlayerCharacter.h"
 #include "HealthDisplayComponent.h"
-#include "SuicideCommand.h"
-#include "KillEnemyCommand.h"
 #include "MoveCommand.h"
 #include "ShootCommand.h"
 #include "BulletsManager.h"
