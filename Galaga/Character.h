@@ -29,6 +29,7 @@ public:
 
 	virtual int GetPlayerIndex() const { return INVALID_PLAYER_INDEX; }
 	virtual void Kill(int killerIndex = INVALID_PLAYER_INDEX);
+	virtual bool IsDead() const { return m_LivesCount <= 0; }
 
 	void OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* pParam) override;
 

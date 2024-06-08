@@ -1,14 +1,14 @@
 #pragma once
+#include "Structs.h"
+#include "Singleton.h"
 #include <string>
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <glm\glm.hpp>
-#include "Structs.h"
-#include "Singleton.h"
 
-// Data layout: Position.x, Position.y, Type, Order, Time (int sec
+// Data layout: Position.x, Position.y, Type, Time (int sec
 // Data format: .csv
 
 class Parser : public Fluffy::Singleton<Parser>
@@ -28,15 +28,21 @@ public:
 			std::getline(file, line);
 
 			std::istringstream iLine{ line };
+
 			std::string posX;
+			iLine >> std::ws;
 			std::getline(iLine, posX, ',');
+
 			std::string posY;
+			iLine >> std::ws;
 			std::getline(iLine, posY, ',');
+
 			std::string type;
+			iLine >> std::ws;
 			std::getline(iLine, type, ',');
-			std::string order;
-			std::getline(iLine, order, ',');
+
 			std::string time;
+			iLine >> std::ws;
 			std::getline(iLine, time);
 
 			if (!posX.empty())
@@ -57,9 +63,7 @@ public:
 				}
 
 				if (isInt)
-				{
 					enemy.position.x = float(std::stoi(posX));
-				}
 			}
 
 			if (!posY.empty())
@@ -80,9 +84,7 @@ public:
 				}
 
 				if (isInt)
-				{
 					enemy.position.y = float(std::stoi(posY));
-				}
 			}
 
 			if (type == "bee")
@@ -92,7 +94,6 @@ public:
 			else if (type == "boss")
 				enemy.type = EnemyType::Boss;
 
-			enemy.order = std::stoi(order);
 			enemy.time = float(std::stoi(time));
 
 			data.push_back(enemy);

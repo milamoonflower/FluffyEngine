@@ -13,7 +13,6 @@ UIManager::UIManager()
 {
 	GameEvents::OnLevelStart.AddListener(this);
 	GameEvents::RemoveLevelStartText.AddListener(this);
-	GameEvents::OnLevelCompleted.AddListener(this);
 	GameEvents::OnGameOver.AddListener(this);
 }
 
@@ -21,7 +20,6 @@ UIManager::~UIManager()
 {
 	GameEvents::OnLevelStart.RemoveListener(this);
 	GameEvents::RemoveLevelStartText.RemoveListener(this);
-	GameEvents::OnLevelCompleted.RemoveListener(this);
 	GameEvents::OnGameOver.RemoveListener(this);
 }
 
@@ -47,7 +45,7 @@ void UIManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEven
 	case Fluffy::EventType::OnLevelStart:
 		if (const LevelStartParam* levelStartParam{ static_cast<const LevelStartParam*>(param) })
 		{
-			m_pLevelIntroText->SetText(std::format("Stage {}", 1));
+			m_pLevelIntroText->SetText(std::format("Stage {}", levelStartParam->GetLevelIndex()));
 			m_pLevelIntroText->GetGameObject()->SetActive(true);
 		}
 		break;
@@ -56,7 +54,6 @@ void UIManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEven
 		m_pLevelIntroText->GetGameObject()->SetActive(false);
 		break;
 
-	case Fluffy::EventType::OnLevelCompleted:
 	case Fluffy::EventType::OnGameOver:
 		if (const GameOverParam * gameOverParam{ static_cast<const GameOverParam*>(param) })
 		{

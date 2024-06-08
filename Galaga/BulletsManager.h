@@ -21,7 +21,7 @@ public:
 	void Initialize();
 	void Update(const float deltaTime);
 	void SetScene(Fluffy::Scene* pScene) { m_Scene = pScene; }
-	void Shoot(const int ownerIndex, const glm::vec2& position);
+	void Shoot(const int ownerIndex, const glm::vec2& position, const glm::vec2& direction = glm::vec2(0.0f, -1.0f));
 
 	void OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* pParam = nullptr) override;
 
@@ -40,4 +40,5 @@ private:
 	int m_ShotsFired[2]{ 0 };
 
 	void PoolBullet(Bullet* pBullet);
+	void PoolAllActiveBullets();
 };

@@ -19,6 +19,11 @@ void PlayerCharacter::Kill(int killerIndex)
 	m_pOwner->SetActive(false);
 }
 
+bool PlayerCharacter::IsDead() const
+{
+	return !m_pOwner->IsActive();
+}
+
 void PlayerCharacter::Respawn()
 {
 	m_pOwner->SetWorldPosition(m_RespawnPosition);
@@ -28,7 +33,7 @@ void PlayerCharacter::Respawn()
 void PlayerCharacter::OnCollisionEnter(Fluffy::GameObject* pOtherGameObject)
 {
 	EnemyCharacter* pEnemy{};
-	const Bullet* pBullet{};
+	Bullet* pBullet{};
 	if (pOtherGameObject->TryGetComponent<EnemyCharacter>(pEnemy) ||
 	   (pOtherGameObject->TryGetComponent<Bullet>(pBullet) && pBullet->GetOwnerIndex() == INVALID_PLAYER_INDEX))
 	{
@@ -36,5 +41,8 @@ void PlayerCharacter::OnCollisionEnter(Fluffy::GameObject* pOtherGameObject)
 
 		if (pEnemy != nullptr)
 			pEnemy->Kill();
+
+		else if (pBullet != nullptr)
+			pBullet->OnTargetHit();
 	}
 }

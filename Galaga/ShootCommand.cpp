@@ -13,6 +13,10 @@ ShootCommand::ShootCommand(int playerIndex)
 
 void ShootCommand::Execute()
 {
-	const glm::vec2 position{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex)->GetGameObject()->GetWorldPosition() };
+	const PlayerCharacter* pPlayerCharacter{ CharactersManager::GetInstance().GetPlayer(m_PlayerIndex) };
+	if (pPlayerCharacter->IsDead())
+		return;
+
+	const glm::vec2 position{ pPlayerCharacter->GetGameObject()->GetWorldPosition() };
 	BulletsManager::GetInstance().Shoot(m_PlayerIndex, position);
 }

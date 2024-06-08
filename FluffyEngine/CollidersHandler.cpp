@@ -1,4 +1,5 @@
 #include "CollidersHandler.h"
+#include "GameObject.h"
 #include "RectColliderComponent.h"
 #include <algorithm>
 #include <iterator>
@@ -46,10 +47,11 @@ namespace Fluffy
 
 		const unsigned int interactionsLayerMaks{ m_LayerInteractions.at(layerName) };
 
-		std::ranges::copy_if(m_ColliderComponents, std::back_inserter(colliders), [this, interactionsLayerMaks](const auto& collider)
+		std::ranges::copy_if(m_ColliderComponents, std::back_inserter(colliders), [this, interactionsLayerMaks](const auto& pCollider)
 			{
 				// check all existing colliders, get their layer name's associated bit position and check if it is in interactionsLayerMaks
-				return interactionsLayerMaks & m_CollisionLayers.at(collider->GetCollisionLayerName());
+				return pCollider->IsEnabled() && pCollider->GetGameObject()->IsActive() &&
+					(interactionsLayerMaks & m_CollisionLayers.at(pCollider->GetCollisionLayerName()));
 			});
 
 		return colliders;

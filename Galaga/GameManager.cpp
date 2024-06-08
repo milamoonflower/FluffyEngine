@@ -1,3 +1,5 @@
+#define ALTERNATE_SPAWN_SIDES
+
 #include "GameManager.h"
 #include "Parser.h"
 #include "BulletsManager.h"
@@ -9,8 +11,10 @@
 #include "Structs.h"
 #include "Parser.h"
 #include "GameEvents.h"
+#include <format>
 
-const float GameManager::PLAYER_RESPAWN_TIMER_DURATION{ 1.0f };
+const float GameManager::PLAYER_RESPAWN_TIMER_DURATION{ 2.0f };
+const int GameManager::LEVELS_COUNT{ 3 };
 
 GameManager::GameManager(Fluffy::GameObject* pOwner)
 	: Component(pOwner)
@@ -35,35 +39,36 @@ GameManager::~GameManager()
 	GameEvents::OnBulletHit.RemoveListener(this);
 }
 
-void GameManager::CreatePlayerCharacters(Fluffy::Scene* scene)
+void GameManager::StartLevel(const int levelIndex)
 {
-	CharactersManager::GetInstance().CreatePlayerCharacters(scene);
-}
+	m_CurrentLevelIndex = levelIndex;
 
-void GameManager::StartLevel1()
-{
-	/*std::vector<EnemyEnteringData> data;
-	Parser::GetInstance().ParseEnemyLayoutData("D:/Repos/FluffyEngine/Data/Formations/galaga_level_1.csv", data);*/
+	CharactersManager::GetInstance().CreatePlayerCharacters();
 
-	std::queue<EnemyEnteringData> enemiesData{};
+	std::vector<EnemyEnteringData> enemiesData;
+	Parser::GetInstance().ParseEnemyLayoutData(std::format("D:/Repos/FluffyEngine/Data/Formations/galaga_level_{}.csv", levelIndex), enemiesData);
+	std::ranges::sort(enemiesData, [](const auto& a, const auto& b) { return a.time < b.time; });
 
-	BezierPath firstPath{};
-	BezierCurve firstCurve{ { -32.0f, -32.0f }, { -32.0f, -32.0f }, { 290.0f, 200.0f }, { 290.0f, 200.0f } };
-	firstPath.AddCurve(firstCurve, 1);
+#ifdef ALTERNATE_SPAWN_SIDES
+	const glm::vec2 spawnPosLeft{ -40.0f, -40.0f };
+	const glm::vec2 spawnPosRight{ SCREEN_SIZE.x + 40.0f, -40.0f };
+#else
+	const glm::vec2 spawnPos{ SCREEN_SIZE.x / 2.0f, -40.0f };
+#endif
 
-	enemiesData.push({ 4.0f, {}, firstPath, EnemyType::Boss });
+	for (auto& data : enemiesData)
+	{
+#ifdef ALTERNATE_SPAWN_SIDES
+		const glm::vec2& spawnPos{ int(data.time) % 2 == 0 ? spawnPosLeft : spawnPosRight };
+#endif
+		data.path.AddCurve({ spawnPos, spawnPos, data.position, data.position }, 1);
+	}
 
-	BezierPath secondPath{};
-	BezierCurve secondCurve{ { 640.0f, -32.0f }, { 640.0f, -32.0f }, { 330.0f, 200.0f }, { 330.0f, 200.0f } };
-	secondPath.AddCurve(secondCurve, 1);
+	std::queue<EnemyEnteringData> enemiesQueue{ };
+	std::ranges::for_each(enemiesData, [&enemiesQueue](const auto& data) { enemiesQueue.push(data); });
 
-	enemiesData.push({ 4.3f, {}, secondPath, EnemyType::Bee });
-
-	m_ShotsFiredCount = 0;
-	m_ShotsHitCount = 0;
-
-	m_ActiveLevel.StartLevel(enemiesData);
-	const LevelStartParam param{ 1 };
+	m_ActiveLevel.StartLevel(enemiesQueue);
+	const LevelStartParam param{ levelIndex };
 	GameEvents::OnLevelStart.Invoke(&param);
 
 	BulletsManager::GetInstance().Initialize();
@@ -94,8 +99,7 @@ void GameManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEv
 			}
 			else
 			{
-				const GameOverParam gameOverParam{ m_ShotsFiredCount, m_ShotsHitCount };
-				GameEvents::OnGameOver.Invoke(&gameOverParam);
+				TriggerGameOver();
 			}
 		}
 		break;
@@ -103,8 +107,15 @@ void GameManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEv
 	case Fluffy::EventType::OnEnemyKilled:
 		if (CharactersManager::GetInstance().AreAllEnemiesDead())
 		{
-			const GameOverParam gameOverParam{ m_ShotsFiredCount, m_ShotsHitCount };
-			GameEvents::OnLevelCompleted.Invoke(&gameOverParam);
+			if (++m_CurrentLevelIndex <= LEVELS_COUNT)
+			{
+				GameEvents::OnLevelCompleted.Invoke();
+				StartLevel(m_CurrentLevelIndex);
+			}
+			else
+			{
+				TriggerGameOver();
+			}
 		}
 		break;
 
@@ -143,4 +154,10 @@ void GameManager::UpdatePlayerRespawnTimers(const float deltaTime)
 void GameManager::RespawnPlayer(const int playerIndex)
 {
 	CharactersManager::GetInstance().RespawnPlayer(playerIndex);
+}
+
+void GameManager::TriggerGameOver()
+{
+	const GameOverParam gameOverParam{ m_ShotsFiredCount, m_ShotsHitCount };
+	GameEvents::OnGameOver.Invoke(&gameOverParam);
 }

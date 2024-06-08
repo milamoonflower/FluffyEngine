@@ -47,7 +47,7 @@ private:
 
 	EnemyEnteringState m_EnteringState;
 	EnemyIdleState m_IdleState;
-	EnemyExitingState m_ExitingState;
+	EnemyDivingState m_ExitingState;
 
 	float m_Speed{ 10.0f };
 

@@ -54,14 +54,14 @@ void ScoreComponent::OnNotify(const Fluffy::EventType& eventType, const Fluffy::
 std::string ScoreComponent::GetScoreString() const
 {
 	std::stringstream ss{};
-	ss << "Player " << m_PlayerIndex + 1 << " Score: " << m_Score;
+	ss << /*"Player " << m_PlayerIndex + 1 <<*/ "Score: " << m_Score;
 	return ss.str();
 }
 
-int ScoreComponent::CalculateScore(const class EnemyCharacter* pEnemy)
+int ScoreComponent::CalculateScore(const class EnemyCharacter* pEnemy) const
 {
-	EnemyType type{ pEnemy->GetType() };
-	EnemyStates state{ pEnemy->GetState() };
+	const EnemyType type{ pEnemy->GetType() };
+	const EnemyStates state{ pEnemy->GetState() };
 
 	int score{ 0 };
 

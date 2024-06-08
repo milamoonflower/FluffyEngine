@@ -36,6 +36,7 @@
 #include "ServiceLocator.h"
 #include "SoundManager.h"
 #include "UIManager.h"
+#include "CharactersManager.h"
 
 using namespace Fluffy;
 
@@ -53,27 +54,8 @@ static void CreateScene()
 	pGameManager->AddComponent<GameManager>();
 	scene.Add(pGameManager);
 
-	GameManager::GetInstance()->CreatePlayerCharacters(&scene);
-
-	// TODO: pass <EnemyType, glm::vec2 spawnPosition>
-	//CharactersManager::GetInstance().SpawnEnemy(scene);
+	CharactersManager::GetInstance().SetScene(&scene);
 	BulletsManager::GetInstance().SetScene(&scene);
-
-	std::shared_ptr<GameObject> pPlayer1ScoreDisplay{ std::make_shared<GameObject>(20.0f, 20.0f) };
-	pPlayer1ScoreDisplay->AddComponent<ScoreComponent>(0, UIManager::GetInstance().GetDefaultFont());
-	scene.Add(pPlayer1ScoreDisplay);
-
-	std::shared_ptr<GameObject> pPlayer1HealthDisplay{ std::make_shared<GameObject>(30.0f, SCREEN_SIZE.y - 30.0f) };
-	pPlayer1HealthDisplay->AddComponent<HealthDisplayComponent>(0);
-	scene.Add(pPlayer1HealthDisplay);
-
-	/*std::shared_ptr<GameObject> pPlayer2ScoreDisplay{ std::make_shared<GameObject>(40.0f, 110.0f) };
-	pPlayer2ScoreDisplay->AddComponent<ScoreComponent>(1, UIManager::GetInstance().GetDefaultFont());
-	scene.Add(pPlayer2ScoreDisplay);
-
-	std::shared_ptr<GameObject> pPlayer2HealthDisplay{ std::make_shared<GameObject>(40.0f, 125.0f) };
-	pPlayer2HealthDisplay->AddComponent<HealthDisplayComponent>(1, UIManager::GetInstance().GetDefaultFont());
-	scene.Add(pPlayer2HealthDisplay);*/
 
 	UIManager::GetInstance().CreateUIPanels(&scene);
 
@@ -104,7 +86,15 @@ static void CreateScene()
 	ServiceLocator::RegisterSoundSystem(std::make_unique<SDLSoundSystem>());
 	SoundManager::GetInstance();	// Create the sound manager
 
-	GameManager::GetInstance()->StartLevel1();
+	GameManager::GetInstance()->StartLevel(1);
+
+	std::shared_ptr<GameObject> pPlayerHealthDisplay{ std::make_shared<GameObject>(30.0f, SCREEN_SIZE.y - 30.0f) };
+	pPlayerHealthDisplay->AddComponent<HealthDisplayComponent>(0);
+	scene.Add(pPlayerHealthDisplay);
+
+	std::shared_ptr<GameObject> pPlayerScoreDisplay{ std::make_shared<GameObject>(20.0f, 20.0f) };
+	pPlayerScoreDisplay->AddComponent<ScoreComponent>(0, UIManager::GetInstance().GetDefaultFont());
+	scene.Add(pPlayerScoreDisplay);
 }
 
 void load()

@@ -31,7 +31,7 @@ void EnemyCharacter::SetState(EnemyStates newState)
 		m_FSM.EnterState(&m_IdleState);
 		break;
 
-	case EnemyStates::Exiting:
+	case EnemyStates::Diving:
 		m_FSM.EnterState(&m_ExitingState);
 		break;
 	}
@@ -48,11 +48,11 @@ void EnemyCharacter::Kill(int killerIndex /*= INVALID_PLAYER_INDEX*/)
 
 void EnemyCharacter::OnCollisionEnter(Fluffy::GameObject* pOtherGameObject)
 {
-	Bullet* bullet{};
-	if (pOtherGameObject->TryGetComponent<Bullet>(bullet) && bullet->GetOwnerIndex() != INVALID_PLAYER_INDEX)
+	Bullet* pBullet{};
+	if (pOtherGameObject->TryGetComponent<Bullet>(pBullet) && pBullet->GetOwnerIndex() != INVALID_PLAYER_INDEX)
 	{
-		Kill(bullet->GetOwnerIndex());
-		bullet->OnTargetHit();
+		Kill(pBullet->GetOwnerIndex());
+		pBullet->OnTargetHit();
 	}
 }
 

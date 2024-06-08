@@ -7,7 +7,7 @@ enum class EnemyStates
 	None,
 	Entering,
 	Idle,
-	Exiting,
+	Diving,
 };
 
 class EnemyEnteringState final : public FSMState
@@ -39,14 +39,14 @@ private:
 	class EnemyCharacter* const m_pOwner;
 };
 
-class EnemyExitingState final : public FSMState
+class EnemyDivingState final : public FSMState
 {
 public:
-	EnemyExitingState(class EnemyCharacter* pOwner);
-	~EnemyExitingState() {};
+	EnemyDivingState(class EnemyCharacter* pOwner);
+	~EnemyDivingState() {};
 	void OnEnter() override;
 	void Update(const float deltaTime) override;
-	inline EnemyStates GetType() const { return EnemyStates::Exiting; }
+	inline EnemyStates GetType() const { return EnemyStates::Diving; }
 private:
 	class EnemyCharacter* const m_pOwner;
 

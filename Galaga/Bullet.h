@@ -11,11 +11,11 @@ namespace Fluffy
 class Bullet final : public Fluffy::Component
 {
 public:
-	Bullet(Fluffy::GameObject* pOwner, int ownerIndex, const glm::vec2& speed = { 0.0f, -100.0f });
+	Bullet(Fluffy::GameObject* pOwner, int ownerIndex, const glm::vec2& speed);
 	~Bullet() = default;
 
 	void Update(const float deltaTime) override;
-	void Initialize(int ownerIndex, const glm::vec2& position);
+	void Initialize(int ownerIndex, const glm::vec2& position, const glm::vec2& speed);
 	void OnTargetHit();
 
 	inline int GetOwnerIndex() const { return m_OwnerIndex; }

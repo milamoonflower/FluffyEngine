@@ -7,7 +7,7 @@
 #include <SDL_ttf.h>
 #include <memory>
 #include <format>
-#include <math.h>
+#include <cmath>
 
 GameOverScreen::GameOverScreen(Fluffy::GameObject* pOwner)
 	: Fluffy::Component(pOwner)

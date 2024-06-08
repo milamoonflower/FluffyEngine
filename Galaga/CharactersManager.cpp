@@ -14,6 +14,7 @@
 #include "GameEvents.h"
 #include <memory>
 #include <algorithm>
+#include <format>
 
 CharactersManager::CharactersManager()
 {
@@ -27,18 +28,24 @@ CharactersManager::~CharactersManager()
 	GameEvents::OnGameOver.RemoveListener(this);
 }
 
-void CharactersManager::CreatePlayerCharacters(Fluffy::Scene* pScene)
+void CharactersManager::CreatePlayerCharacters()
 {
-	std::shared_ptr<Fluffy::GameObject> pPlayer1{ std::make_shared<Fluffy::GameObject>(SCREEN_SIZE.x / 2.0f, SCREEN_SIZE.y - 80.0f) };
+	if (!m_PlayerCharacters.empty())
+	{
+		std::ranges::for_each(m_PlayerCharacters, [](auto& player) { player->Respawn(); });
+		return;
+	}
 
-	pPlayer1->AddComponent<Fluffy::Sprite>("galaga_player1.png");
-	PlayerCharacter* pPlayer1Component{ pPlayer1->AddComponent<PlayerCharacter>(4, int(m_PlayerCharacters.size())) };
-	pScene->Add(pPlayer1);
-	pPlayer1Component->GetOnDeath().AddListener(this);
+	std::shared_ptr<Fluffy::GameObject> pPlayer{ std::make_shared<Fluffy::GameObject>(SCREEN_SIZE.x / 2.0f, SCREEN_SIZE.y - 80.0f) };
+	m_pCurrentScene->Add(pPlayer);
 
-	m_PlayerCharacters.push_back(pPlayer1Component);
+	const int playerIndex{ int(m_PlayerCharacters.size()) };
+	pPlayer->AddComponent<Fluffy::Sprite>(std::format("galaga_player{}.png", playerIndex + 1));
 
-	m_pCurrentScene = pScene;
+	PlayerCharacter* pPlayerComponent{ pPlayer->AddComponent<PlayerCharacter>(4, playerIndex) };
+	pPlayerComponent->GetOnDeath().AddListener(this);
+
+	m_PlayerCharacters.push_back(pPlayerComponent);
 }
 
 EnemyCharacter* CharactersManager::SpawnEnemy(const EnemyEnteringData& data)
@@ -122,7 +129,7 @@ void CharactersManager::ClearAllCharacters()
 {
 	std::ranges::for_each(m_PlayerCharacters, [](auto& pPlayer)
 		{
-			pPlayer->GetGameObject()->Destroy();
+			pPlayer->GetGameObject()->SetActive(false);
 		});
 
 	std::ranges::for_each(m_Enemies, [](auto& pEnemy)
@@ -130,6 +137,5 @@ void CharactersManager::ClearAllCharacters()
 			pEnemy->GetGameObject()->Destroy();
 		});
 
-	m_PlayerCharacters.clear();
 	m_Enemies.clear();
 }

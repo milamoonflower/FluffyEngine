@@ -21,6 +21,7 @@ public:
 
 	int GetPlayerIndex() const override { return m_PlayerIndex; }
 	void Kill(int killerIndex = INVALID_PLAYER_INDEX) override;
+	bool IsDead() const override;
 	void Respawn();
 
 protected:

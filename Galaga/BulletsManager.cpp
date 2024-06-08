@@ -14,9 +14,10 @@ const float BulletsManager::PLAYER_BULLETS_SPEED{ 400.0f };
 const float BulletsManager::SHOOT_INTERVAL{ 0.2f };
 const int BulletsManager::MAX_BULLETS_COUNT_PER_PLAYER{ 2 };
 
-void BulletsManager::Shoot(const int ownerIndex, const glm::vec2& position)
+void BulletsManager::Shoot(const int ownerIndex, const glm::vec2& position, const glm::vec2& direction /*= glm::vec2(0.0f, -1.0f)*/)
 {
-	if (m_ShootTimer[ownerIndex] > 0.0f || m_ActivePlayerBulletCounts[ownerIndex] >= MAX_BULLETS_COUNT_PER_PLAYER)
+	if (ownerIndex != INVALID_PLAYER_INDEX &&
+		(m_ShootTimer[ownerIndex] > 0.0f || m_ActivePlayerBulletCounts[ownerIndex] >= MAX_BULLETS_COUNT_PER_PLAYER))
 		return;
 
 	Bullet* pBullet;
@@ -29,20 +30,22 @@ void BulletsManager::Shoot(const int ownerIndex, const glm::vec2& position)
 	else
 	{
 		std::shared_ptr<Fluffy::GameObject> pBulletObject{ std::make_shared<Fluffy::GameObject>(position) };
-		pBullet = pBulletObject->AddComponent<Bullet>(ownerIndex, glm::vec2(0.0f, -PLAYER_BULLETS_SPEED));
+		pBullet = pBulletObject->AddComponent<Bullet>(ownerIndex, direction * PLAYER_BULLETS_SPEED);
 
 		m_Scene->Add(pBulletObject);
 	}
 
 	m_ActiveBullets.push_back(pBullet);
-	pBullet->Initialize(ownerIndex, position);
-
-	m_ShootTimer[ownerIndex] = SHOOT_INTERVAL;
-	++m_ActivePlayerBulletCounts[ownerIndex];
-	++m_ShotsFired[ownerIndex];
+	pBullet->Initialize(ownerIndex, position, direction * PLAYER_BULLETS_SPEED);
 
 	if (ownerIndex != INVALID_PLAYER_INDEX)
+	{
+		m_ShootTimer[ownerIndex] = SHOOT_INTERVAL;
+		++m_ActivePlayerBulletCounts[ownerIndex];
+		++m_ShotsFired[ownerIndex];
+
 		GameEvents::OnPlayerShoot.Invoke();
+	}
 }
 
 void BulletsManager::Initialize()
@@ -57,6 +60,8 @@ void BulletsManager::Initialize()
 	m_Scene->Add(pPlayableAreaObject);
 
 	GameEvents::OnBulletHit.AddListener(this);
+	GameEvents::OnLevelCompleted.AddListener(this);
+	GameEvents::OnGameOver.AddListener(this);
 }
 
 void BulletsManager::Update(const float deltaTime)
@@ -87,19 +92,31 @@ void BulletsManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::
 				PoolBullet(pBullet);
 			}
 		}
+		break;
+
+	case Fluffy::EventType::OnLevelCompleted:
+	case Fluffy::EventType::OnGameOver:
+		PoolAllActiveBullets();
+		break;
 	}
 }
 
 void BulletsManager::PoolBullet(Bullet* pBullet)
 {
-	const auto& bullet{ std::ranges::find(m_ActiveBullets, pBullet) };
-	if (bullet == m_ActiveBullets.end())
+	const auto& it{ std::ranges::find(m_ActiveBullets, pBullet) };
+	if (it == m_ActiveBullets.end())
 		return;
 
 	--m_ActivePlayerBulletCounts[pBullet->GetOwnerIndex()];
 
 	m_BulletsPool.push(pBullet);
-	m_ActiveBullets.erase(bullet);
+	m_ActiveBullets.erase(it);
 
 	pBullet->GetGameObject()->SetActive(false);
+}
+
+void BulletsManager::PoolAllActiveBullets()
+{
+	for (int i = int(m_ActiveBullets.size()) - 1; i >= 0; --i)
+		PoolBullet(m_ActiveBullets.at(i));
 }

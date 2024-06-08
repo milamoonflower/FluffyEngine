@@ -1,6 +1,10 @@
 #include "EnemyStates.h"
 #include "EnemyCharacter.h"
+#include "PlayerCharacter.h"
 #include "GameObject.h"
+#include "CharactersManager.h"
+#include "BulletsManager.h"
+#include <glm\glm.hpp>
 
 EnemyEnteringState::EnemyEnteringState(class EnemyCharacter* pOwner)
 	: m_pOwner(pOwner)
@@ -57,21 +61,25 @@ void EnemyIdleState::Update(const float /*deltaTime*/)
 	// Do the idle movement/formation here
 }
 
-EnemyExitingState::EnemyExitingState(class EnemyCharacter* pOwner)
+EnemyDivingState::EnemyDivingState(class EnemyCharacter* pOwner)
 	: m_pOwner(pOwner)
 {
 
 }
 
-void EnemyExitingState::OnEnter()
+void EnemyDivingState::OnEnter()
 {
 	m_CurrentPathCurveIndex = 0;
 
-	if (m_pOwner != nullptr)
-		m_StartPosition = m_pOwner->GetGameObject()->GetWorldPosition();
+	m_StartPosition = m_pOwner->GetGameObject()->GetWorldPosition();
+
+	const glm::vec2 playerPosition{ CharactersManager::GetInstance().GetPlayer(0)->GetGameObject()->GetWorldPosition() };
+	const glm::vec2 shootDirection{ glm::normalize(playerPosition - m_StartPosition) };
+
+	BulletsManager::GetInstance().Shoot(INVALID_PLAYER_INDEX, m_StartPosition, shootDirection);
 }
 
-void EnemyExitingState::Update(const float deltaTime)
+void EnemyDivingState::Update(const float deltaTime)
 {
 	const BezierPath path{ m_pOwner->GetExitingPath() };
 

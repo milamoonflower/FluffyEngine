@@ -22,15 +22,16 @@ public:
 	GameManager& operator=(const GameManager&) = delete;
 	GameManager& operator=(GameManager&&) = delete;
 
-	void CreatePlayerCharacters(Fluffy::Scene* scene);
-	void StartLevel1();
+	void StartLevel(const int levelIndex);
 	void Update(const float deltaTime) override;
 	void OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* param) override;
 
 private:
 	Level m_ActiveLevel{};
+	int m_CurrentLevelIndex{ 0 };
 
 	const static float PLAYER_RESPAWN_TIMER_DURATION;
+	const static int LEVELS_COUNT;
 
 	float m_PlayerRespawnTimers[2]{ 0.0f };
 
@@ -40,4 +41,5 @@ private:
 	void StartPlayerRespawnTimer(const int playerIndex);
 	void UpdatePlayerRespawnTimers(const float deltaTime);
 	void RespawnPlayer(const int playerIndex);
+	void TriggerGameOver();
 };

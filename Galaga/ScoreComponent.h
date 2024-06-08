@@ -35,6 +35,6 @@ private:
 	int m_MovingBossKillScore{ 400 };
 
 	std::string GetScoreString() const;
-	int CalculateScore(const class EnemyCharacter* pEnemy);
+	int CalculateScore(const class EnemyCharacter* pEnemy) const;
 };
 
