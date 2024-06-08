@@ -62,6 +62,11 @@ namespace Fluffy
 		return m_LocalTransform.GetPosition();
 	}
 
+	glm::vec2 GameObject::GetLocalPosition() const
+	{
+		return m_LocalTransform.GetPosition();
+	}
+
 	void GameObject::SetWorldPosition(const float x, const float y)
 	{
 		SetWorldPosition(glm::vec2(x, y));

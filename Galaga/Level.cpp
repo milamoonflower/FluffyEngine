@@ -28,6 +28,7 @@ void Level::StartLevel(const std::queue<EnemyEnteringData>& data)
 	m_EnemyExitTimer = m_EnemyDiveInterval;
 	m_Playing = true;
 	m_RemovedLevelName = false;
+	m_HaveEnemiesEnteredIdle = false;
 }
 
 void Level::Update(const float deltaTime)
@@ -64,6 +65,12 @@ void Level::Update(const float deltaTime)
 	}
 	else if (AreAllEnemiesIdle())
 	{
+		if (!m_HaveEnemiesEnteredIdle)
+		{
+			m_OnEnemiesIdleStart.Invoke();
+			m_HaveEnemiesEnteredIdle = true;
+		}
+
 		m_EnemyExitTimer -= deltaTime;
 
 		HandleEnemyDiving();

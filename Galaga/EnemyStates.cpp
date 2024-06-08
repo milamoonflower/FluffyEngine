@@ -40,7 +40,7 @@ void EnemyEnteringState::Update(const float deltaTime)
 	else
 	{
 		// We arrived!
-		pOwnerObject->GetTransform().SetPosition(curveEndPoint);
+		pOwnerObject->SetWorldPosition(curveEndPoint);
 		m_pOwner->SetState(EnemyStates::Idle);
 	}
 }
@@ -71,12 +71,16 @@ void EnemyDivingState::OnEnter()
 {
 	m_CurrentPathCurveIndex = 0;
 
+	m_Squadron = m_pOwner->GetGameObject()->GetParent();
 	m_StartPosition = m_pOwner->GetGameObject()->GetWorldPosition();
+	m_StartPositionInSquadron = m_pOwner->GetGameObject()->GetLocalPosition();
+
+	m_pOwner->GetGameObject()->SetParent(nullptr, true);
 
 	const glm::vec2 playerPosition{ CharactersManager::GetInstance().GetPlayer(0)->GetGameObject()->GetWorldPosition() };
-	const glm::vec2 shootDirection{ glm::normalize(playerPosition - m_StartPosition) };
+	const glm::vec2 shootDirection{ glm::normalize(playerPosition - m_StartPositionInSquadron) };
 
-	BulletsManager::GetInstance().Shoot(INVALID_PLAYER_INDEX, m_StartPosition, shootDirection);
+	BulletsManager::GetInstance().Shoot(INVALID_PLAYER_INDEX, m_StartPositionInSquadron, shootDirection);
 }
 
 void EnemyDivingState::Update(const float deltaTime)
@@ -84,7 +88,13 @@ void EnemyDivingState::Update(const float deltaTime)
 	const BezierPath path{ m_pOwner->GetExitingPath() };
 
 	Fluffy::GameObject* pOwnerObject{ m_pOwner->GetGameObject() };
-	const glm::vec2 curveEndPoint{ m_StartPosition + path.GetCurve(m_CurrentPathCurveIndex).GetEndPoint() };
+
+	const glm::vec2 curveEndPoint
+	{
+		m_IsReturningToStartPos ?
+		m_StartPositionInSquadron + m_Squadron->GetWorldPosition() :
+		m_StartPosition + path.GetCurve(m_CurrentPathCurveIndex).GetEndPoint()
+	};
 
 	const glm::vec2 distance{ curveEndPoint - pOwnerObject->GetWorldPosition() };
 	pOwnerObject->GetTransform().Translate(glm::normalize(distance) * (m_pOwner->GetSpeed() * deltaTime));
@@ -98,11 +108,17 @@ void EnemyDivingState::Update(const float deltaTime)
 	if (path.HasCurve(m_CurrentPathCurveIndex + 1))
 	{
 		++m_CurrentPathCurveIndex;
+		m_IsReturningToStartPos = path.GetCurve(m_CurrentPathCurveIndex).GetEndPoint() == glm::vec2{ 0.0f, 0.0f };
 	}
 	else
 	{
 		// We arrived!
-		pOwnerObject->GetTransform().SetPosition(curveEndPoint);
+		pOwnerObject->SetWorldPosition(curveEndPoint);
 		m_pOwner->SetState(EnemyStates::Idle);
 	}
+}
+
+void EnemyDivingState::OnExit()
+{
+	m_pOwner->GetGameObject()->SetParent(m_Squadron, true);
 }

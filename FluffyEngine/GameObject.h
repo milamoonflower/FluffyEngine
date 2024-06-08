@@ -114,10 +114,12 @@ namespace Fluffy
 		inline void SetCurrentScene(class Scene* pScene) { m_pScene = pScene; }
 
 		void SetParent(GameObject* pParent, const bool keepWorldPosition);
+		inline GameObject* GetParent() { return m_pParent; }
 
 		inline Transform& GetTransform() { return m_LocalTransform; }
 		inline const Transform& GetTransform() const { return m_LocalTransform; }
 		glm::vec2 GetWorldPosition() const;
+		glm::vec2 GetLocalPosition() const;
 		void SetWorldPosition(const float x, const float y);
 		void SetWorldPosition(const glm::vec2& position);
 		void SetLocalPosition(const float x, const float y);

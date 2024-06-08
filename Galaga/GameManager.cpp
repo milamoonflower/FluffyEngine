@@ -37,13 +37,23 @@ GameManager::~GameManager()
 
 	GameEvents::OnPlayerShoot.RemoveListener(this);
 	GameEvents::OnBulletHit.RemoveListener(this);
+
+	m_ActiveLevel.GetOnEnemiesIdleStartEvent().RemoveListener(this);
 }
 
 void GameManager::StartLevel(const int levelIndex)
 {
 	m_CurrentLevelIndex = levelIndex;
 
+	const float screenMidPoint{ SCREEN_SIZE.x / 2.0f };
+	float biggestEnemyDistanceFromCenter{ 0.0f };
+
 	CharactersManager::GetInstance().CreatePlayerCharacters();
+
+	if (m_EnemiesSquadron.IsInitialized())
+		m_EnemiesSquadron.Reset();
+	else
+		m_EnemiesSquadron.Initialize(CharactersManager::GetInstance().GetEnemiesSquadron(), m_ActiveLevel.GetOnEnemiesIdleStartEvent());
 
 	std::vector<EnemyEnteringData> enemiesData;
 	Parser::GetInstance().ParseEnemyLayoutData(std::format("D:/Repos/FluffyEngine/Data/Formations/galaga_level_{}.csv", levelIndex), enemiesData);
@@ -62,9 +72,17 @@ void GameManager::StartLevel(const int levelIndex)
 		const glm::vec2& spawnPos{ int(data.time) % 2 == 0 ? spawnPosLeft : spawnPosRight };
 #endif
 		data.path.AddCurve({ spawnPos, spawnPos, data.position, data.position }, 1);
+
+		const float distanceFromCenter{ data.position.x - screenMidPoint };
+
+		if (distanceFromCenter * distanceFromCenter > biggestEnemyDistanceFromCenter * biggestEnemyDistanceFromCenter)
+			biggestEnemyDistanceFromCenter = distanceFromCenter;
 	}
 
-	std::queue<EnemyEnteringData> enemiesQueue{ };
+	const float estimatedEnemyHalfWidth{ 16.0f };
+	m_EnemiesSquadron.SetMaxSwayDistance(screenMidPoint - std::abs(biggestEnemyDistanceFromCenter) - estimatedEnemyHalfWidth);
+
+	std::queue<EnemyEnteringData> enemiesQueue{};
 	std::ranges::for_each(enemiesData, [&enemiesQueue](const auto& data) { enemiesQueue.push(data); });
 
 	m_ActiveLevel.StartLevel(enemiesQueue);
@@ -91,6 +109,7 @@ void GameManager::Update(const float deltaTime)
 {
 	// if the level has started
 	m_ActiveLevel.Update(deltaTime);
+	m_EnemiesSquadron.Update(deltaTime);
 
 	UpdatePlayerRespawnTimers(deltaTime);
 

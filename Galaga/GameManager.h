@@ -3,6 +3,7 @@
 #include "Level.h"
 #include "Event.h"
 #include "IEventListener.h"
+#include "EnemiesSquadron.h"
 
 namespace Fluffy
 {
@@ -30,6 +31,8 @@ public:
 private:
 	Level m_ActiveLevel{};
 	int m_CurrentLevelIndex{ 0 };
+
+	EnemiesSquadron m_EnemiesSquadron{};
 
 	const static float PLAYER_RESPAWN_TIMER_DURATION;
 	const static int LEVELS_COUNT;

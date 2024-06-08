@@ -46,11 +46,17 @@ void CharactersManager::CreatePlayerCharacters()
 	pPlayerComponent->GetOnDeath().AddListener(this);
 
 	m_PlayerCharacters.push_back(pPlayerComponent);
+
+	std::shared_ptr<Fluffy::GameObject> pEnemiesSquadron{ std::make_shared<Fluffy::GameObject>(SCREEN_SIZE / 2.0f) };
+	m_pCurrentScene->Add(pEnemiesSquadron);
+	m_pEnemiesSquadron = pEnemiesSquadron.get();
 }
 
 EnemyCharacter* CharactersManager::SpawnEnemy(const EnemyEnteringData& data)
 {
 	std::shared_ptr<Fluffy::GameObject> pEnemy{ std::make_shared<Fluffy::GameObject>(data.path.GetStartPoint()) };
+	pEnemy->SetParent(m_pEnemiesSquadron, true);
+
 	std::string fileName;
 
 	switch (data.type)

@@ -10,6 +10,11 @@ enum class EnemyStates
 	Diving,
 };
 
+namespace Fluffy
+{
+	class GameObject;
+}
+
 class EnemyEnteringState final : public FSMState
 {
 public:
@@ -46,10 +51,14 @@ public:
 	~EnemyDivingState() {};
 	void OnEnter() override;
 	void Update(const float deltaTime) override;
+	void OnExit() override;
 	inline EnemyStates GetType() const { return EnemyStates::Diving; }
 private:
 	class EnemyCharacter* const m_pOwner;
 
+	Fluffy::GameObject* m_Squadron{};
 	glm::vec2 m_StartPosition{};
+	glm::vec2 m_StartPositionInSquadron{};
 	int m_CurrentPathCurveIndex{ 0 };
+	bool m_IsReturningToStartPos{ false };
 };

@@ -17,6 +17,7 @@ namespace Fluffy
 		OnCollisionExit,
 		OnBulletHit,
 		RemoveLevelStartText,
+		OnEnemiesIdleStart,
 	};
 
 	class Event

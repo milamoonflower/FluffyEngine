@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Structs.h"
 #include "IEventListener.h"
+#include "Event.h"
 #include <vector>
 #include <queue>
 
@@ -19,6 +20,7 @@ public:
 
 	void StartLevel(const std::queue<EnemyEnteringData>& data);
 	void Update(const float deltaTime);
+	Fluffy::Event& GetOnEnemiesIdleStartEvent() { return m_OnEnemiesIdleStart; }
 
 	Level(const Level&) = delete;
 	Level(Level&&) = delete;
@@ -26,8 +28,11 @@ public:
 	Level& operator=(Level&&) = delete;
 
 private:
+	Fluffy::Event m_OnEnemiesIdleStart{ Fluffy::EventType::OnEnemiesIdleStart };
+
 	float m_Time{ 0.0f };
 	std::queue<EnemyEnteringData> m_EnemyEnteringData{};
+	bool m_HaveEnemiesEnteredIdle{ false };
 
 	const float m_MinEnemiesSpawnInterval{ 0.1f };
 	const float m_RemoveLevelNameTime{ 2.0f };

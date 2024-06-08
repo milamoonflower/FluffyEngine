@@ -10,6 +10,7 @@
 namespace Fluffy
 {
 	struct IEventParam;
+	class GameObject;
 	class Scene;
 }
 
@@ -27,6 +28,7 @@ public:
 	void OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* param) override;
 
 	class PlayerCharacter* GetPlayer(const int playerIndex);
+	Fluffy::GameObject* GetEnemiesSquadron() const { return m_pEnemiesSquadron; }
 	inline bool AreAllEnemiesDead() const { return m_Enemies.empty(); }
 
 	inline Fluffy::Event& GetOnPlayerKilled() { return m_OnPlayerKilled; }
@@ -43,4 +45,5 @@ private:
 	std::vector<class EnemyCharacter*> m_Enemies{};
 
 	Fluffy::Scene* m_pCurrentScene{};
+	Fluffy::GameObject* m_pEnemiesSquadron{};
 };

@@ -169,6 +169,7 @@
     <ClCompile Include="BulletsManager.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CharactersManager.cpp" />
+    <ClCompile Include="EnemiesSquadron.cpp" />
     <ClCompile Include="EnemyCharacter.cpp" />
     <ClCompile Include="FiniteStateMachine.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharactersManager.h" />
     <ClInclude Include="CollisionLayers.h" />
+    <ClInclude Include="EnemiesSquadron.h" />
     <ClInclude Include="EnemyCharacter.h" />
     <ClInclude Include="EventParams.h" />
     <ClInclude Include="FiniteStateMachine.h" />
