@@ -38,6 +38,7 @@
 #include "SoundManager.h"
 #include "UIManager.h"
 #include "CharactersManager.h"
+#include "BackgroundScroller.h"
 
 using namespace Fluffy;
 
@@ -48,10 +49,10 @@ static void CreateScene()
 	auto& scene = SceneManager::GetInstance().CreateScene("MainScene");
 
 	std::shared_ptr<GameObject> pBackground{ std::make_shared<GameObject>(SCREEN_SIZE / 2.0f) };
-	pBackground->AddComponent<Sprite>("bg.png");
+	pBackground->AddComponent<BackgroundScroller>("bg.png");
 	scene.Add(pBackground);
 
-	std::shared_ptr<GameObject> pGameManager{ std::make_shared<GameObject>(0.0f, 0.0f) };
+	std::shared_ptr<GameObject> pGameManager{ std::make_shared<GameObject>(SCREEN_SIZE / 2.0f) };
 	pGameManager->AddComponent<GameManager>();
 	scene.Add(pGameManager);
 

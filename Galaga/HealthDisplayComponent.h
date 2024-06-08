@@ -1,11 +1,9 @@
 #pragma once
 #include "Component.h"
 #include "IEventListener.h"
-#include <memory>
 
 namespace Fluffy
 {
-	class Component;
 	class GameObject;
 	class Sprite;
 }
