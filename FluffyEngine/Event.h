@@ -6,6 +6,8 @@ namespace Fluffy
 	enum class EventType
 	{
 		OnGameStart,
+		OnLevelCompleted,
+		OnGameOver,
 		OnPlayerShoot,
 		OnDamageTaken,
 		OnCharacterDeath,

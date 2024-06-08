@@ -4,8 +4,10 @@
 #include "CharactersManager.h"
 #include "EventParams.h"
 #include "Character.h"
+#include "PlayerCharacter.h"
 #include "Structs.h"
 #include "Parser.h"
+#include "GameEvents.h"
 
 const float GameManager::PLAYER_RESPAWN_TIMER_DURATION{ 1.0f };
 
@@ -64,13 +66,18 @@ void GameManager::OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEv
 	case Fluffy::EventType::OnPlayerKilled:
 		if (const CharacterDeathParam* deathParam{ static_cast<const CharacterDeathParam*>(param) })
 		{
-			const int characterIndex{ deathParam->GetCharacter()->GetPlayerIndex() };
-			StartPlayerRespawnTimer(characterIndex);
+			const int playerIndex{ deathParam->GetCharacter()->GetPlayerIndex() };
+
+			if (CharactersManager::GetInstance().GetPlayer(playerIndex)->GetLivesCount() > 0)
+				StartPlayerRespawnTimer(playerIndex);
+			else
+				GameEvents::OnGameOver.Invoke();
 		}
 		break;
 
 	case Fluffy::EventType::OnEnemyKilled:
-
+		if (CharactersManager::GetInstance().AreAllEnemiesDead())
+			GameEvents::OnLevelCompleted.Invoke();
 		break;
 	}
 }

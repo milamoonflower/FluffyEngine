@@ -15,6 +15,8 @@ namespace Fluffy
 
 class CharactersManager final : public Fluffy::Singleton<CharactersManager>, public Fluffy::IEventListener
 {
+	friend Fluffy::Singleton<CharactersManager>;
+
 public:
 	void CreatePlayerCharacters(Fluffy::Scene* pScene);
 	class EnemyCharacter* SpawnEnemy(const EnemyEnteringData& data);
@@ -22,10 +24,15 @@ public:
 	void OnNotify(const Fluffy::EventType& eventType, const Fluffy::IEventParam* param) override;
 
 	class PlayerCharacter* GetPlayer(const int playerIndex);
+	inline bool AreAllEnemiesDead() const { return m_Enemies.empty(); }
+
 	inline Fluffy::Event& GetOnPlayerKilled() { return m_OnPlayerKilled; }
 	inline Fluffy::Event& GetOnEnemyKilled() { return m_OnEnemyKilled; }
 
 private:
+	CharactersManager();
+	void ClearAllCharacters();
+
 	Fluffy::Event m_OnPlayerKilled{ Fluffy::EventType::OnPlayerKilled };
 	Fluffy::Event m_OnEnemyKilled{ Fluffy::EventType::OnEnemyKilled };
 

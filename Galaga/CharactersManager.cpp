@@ -11,8 +11,15 @@
 #include "EventParams.h"
 #include "BulletsManager.h"
 #include "Structs.h"
+#include "GameEvents.h"
 #include <memory>
 #include <algorithm>
+
+CharactersManager::CharactersManager()
+{
+	GameEvents::OnLevelCompleted.AddListener(this);
+	GameEvents::OnGameOver.AddListener(this);
+}
 
 void CharactersManager::CreatePlayerCharacters(Fluffy::Scene* pScene)
 {
@@ -79,15 +86,20 @@ void CharactersManager::OnNotify(const Fluffy::EventType& eventType, const Fluff
 			}
 			else
 			{
-				m_OnEnemyKilled.Invoke(param);
-
 				const EnemyCharacter* pEnemy{ static_cast<EnemyCharacter*>(deathParam->GetCharacter()) };
 
 				const auto& it{ std::ranges::find(m_Enemies, pEnemy) };
 				if (it != m_Enemies.end())
 					m_Enemies.erase(it);
+
+				m_OnEnemyKilled.Invoke(param);
 			}
 		}
+		break;
+
+	case Fluffy::EventType::OnLevelCompleted:
+	case Fluffy::EventType::OnGameOver:
+		ClearAllCharacters();
 		break;
 	}
 }
@@ -97,4 +109,20 @@ PlayerCharacter* CharactersManager::GetPlayer(const int playerIndex)
 	return playerIndex != INVALID_PLAYER_INDEX && playerIndex < int(m_PlayerCharacters.size()) ?
 			m_PlayerCharacters[playerIndex] :
 			nullptr;
+}
+
+void CharactersManager::ClearAllCharacters()
+{
+	std::ranges::for_each(m_PlayerCharacters, [](auto& pPlayer)
+		{
+			pPlayer->GetGameObject()->Destroy();
+		});
+
+	std::ranges::for_each(m_Enemies, [](auto& pEnemy)
+		{
+			pEnemy->GetGameObject()->Destroy();
+		});
+
+	m_PlayerCharacters.clear();
+	m_Enemies.clear();
 }
