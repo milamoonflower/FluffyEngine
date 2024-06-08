@@ -46,7 +46,7 @@ static void CreateLevel1()
 
 	auto& scene = SceneManager::GetInstance().CreateScene("Level1");
 
-	const auto font{ ResourceManager::GetInstance().LoadFont("Lingua.otf", 15) };
+	const auto font{ ResourceManager::GetInstance().LoadFont("emulogic.ttf", 15) };
 
 	std::shared_ptr<GameObject> pBackground{ std::make_shared<GameObject>(SCREEN_SIZE / 2.0f) };
 	pBackground->AddComponent<Sprite>("bg.png");
